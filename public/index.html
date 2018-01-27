@@ -40,8 +40,6 @@
          }
       }
 
-
-
       //Adds a user to the game.
       function register() {
          var messageObject = {
@@ -84,6 +82,13 @@
          });
 
       })
+
+      function switchPage(pageId)
+      {
+         $(".page").hide();
+         $("#"+pageId).show();
+      }
+
    </script>
 
 
@@ -100,13 +105,64 @@
   <div class="w3-cell">
   </div>
   <div class="w3-cell w3-container">
-   <div class="page" >
+   <div class="page" id="start_page" >
 
       <p>Enter Your name: <input id="player_name" type="text" name="name"/></p>
       <button id="register_button">Join Game</button>
 
-      <div id="timeRemaining"></div>
       <button id="start_game">Start Game</button>
+   </div>
+   <div class="page" id="game_page" >
+      <div id="timeRemaining"></div>
+      <p>Time remaining to find a cure</p>
+
+      <div id="known_info">
+         <table>
+            <tr>
+               <td>
+                  Symptoms
+               </td>
+               <td>
+                  A
+               </td>
+               <td>
+                  B
+               </td>
+               <td>
+                  C
+               </td>
+               <td>
+                  D
+               </td>
+               <td>
+                  E
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  Mutagens
+               </td>
+               <td>
+                  1
+               </td>
+               <td>
+                  2
+               </td>
+               <td>
+                  3
+               </td>    
+               <td>
+                  4
+               </td>                          
+               <td>
+                  5
+               </td>               
+            </tr>
+         </table>
+      </div>
+      <div >
+
+      </div>
 
    </div>
   </div>
