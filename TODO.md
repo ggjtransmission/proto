@@ -8,6 +8,6 @@ Server:
 Client; 
 * ~Connect to a server~
 * Add communication with other clients
-* Register as a player
+* ~Register as a player~
 * Get list of all players in your game
 * Design packet of information

@@ -19,8 +19,24 @@
       s.onmessage = function(m)
       {
          var data = JSON.parse(m.data);
-         console.log(data);
+         processMessage(data);
       }
+
+      function processMessage(data)
+      {
+         switch(data.type)
+         {
+            case "time":
+            // console.log("update time");
+               updateTime(data.message);
+            break;
+            case "register":
+
+            break;
+         }
+      }
+
+
 
       //Adds a user to the game.
       function register() {
@@ -31,10 +47,28 @@
          s.send(JSON.stringify(messageObject));
       }
 
+      function sendStart(){
+            var messageObject = {
+            type: "start",
+         }
+         s.send(JSON.stringify(messageObject));
+      }
+
+      function updateTime(time){
+         var min = Math.floor(time / 60);
+         var sec = time - min * 60;
+         var prettyTime = min + ":" + sec;
+         $("#timeRemaining").html(prettyTime);
+      }
+
       $(document).ready(function(){
          $(register_button).click(function()
          {
             register();
+         })
+
+         $(start_game).click(function(){
+            sendStart();
          })
       })
 
@@ -45,5 +79,9 @@
 
    <p>Enter Your name: <input id="player_name" type="text" name="name"/></p>
    <button id="register_button">Register</button>
+
+
+   <div id="timeRemaining"></div>
+   <button id="start_game">Start Game</button>
 </body>
 </html>

@@ -4,17 +4,20 @@ module.exports = function (socketServer)
    var game = {};
 
    game.players = [];
+   game.time = 30 * 60 ; 
+   game.running = false;
+
 
    game.process = function(message)
    {
       switch(message.type){
 
          case "register": //Registering new players
-
-
-            // return game.register(message);
             socketServer.broadcast(JSON.stringify(game.register(message)))
-
+         break;
+         case "start":
+            game.running = true;
+            socketServer.broadcast(JSON.stringify({"type":"time","message":game.time}))
          break;
          default:
             console.log("here instead");
@@ -34,6 +37,14 @@ module.exports = function (socketServer)
       }
       return returnMessage;
    }
+
+   setInterval(function(){
+      if(game.running)
+      {
+         game.time--;
+         socketServer.broadcast(JSON.stringify({"type":"time","message":game.time}))
+      }
+   },1000)
 
    return game;
 }
