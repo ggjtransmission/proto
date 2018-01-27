@@ -25,11 +25,16 @@ wsServer.broadcast = function broadcast(data) {
 };
 
 wsServer.on('connection',(ws,req)=>{
+  try {
   console.log("User Connected: ", ws._socket.remoteAddress);
   ws.on('message', function incoming(message) {
 
     let result = game.process(JSON.parse(message));
   });
+  }
+  catch(err) {
+    console.log("ewps");
+  }
 })
 
 wsServer.on('close',function(ws,req){
