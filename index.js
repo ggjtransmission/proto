@@ -6,6 +6,20 @@ var webport = 3000;
 
 var app = express();
 
+var landPage = "home.html";
+
+app.get('/', function(req,res){
+  if(game.exists){
+    if(game.running){
+      landPage = "gameInProgress.html";
+    }else{
+      landPage = "join.html";
+    }
+  }else{    
+    landPage = "home.html";
+  }
+  res.redirect(landPage);
+})
 app.use(express.static('public'));
 var server = require('http').createServer(app);
 
@@ -28,7 +42,7 @@ wsServer.on('connection',(ws,req)=>{
   try {
   console.log("User Connected: ", ws._socket.remoteAddress);
   ws.on('message', function incoming(message) {
-
+    console.log("message = " + message)
     let result = game.process(JSON.parse(message));
   });
   }

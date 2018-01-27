@@ -4,7 +4,8 @@ module.exports = function (socketServer)
    var game = {};
 
    game.players = [];
-   game.time = 30 * 60 ; 
+   game.time = 30 * 60 ;
+   game.exists = false; 
    game.running = false;
 
 
@@ -12,6 +13,10 @@ module.exports = function (socketServer)
    {
       switch(message.type){
 
+         case "create": //Create new game
+            game.exists = true;
+            socketServer.broadcast(JSON.stringify({"game":"created"}))
+         break;
          case "register": //Registering new players
             socketServer.broadcast(JSON.stringify(game.register(message)))
          break;
