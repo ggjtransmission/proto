@@ -1,0 +1,24 @@
+{
+  "name": "proto",
+  "version": "1.0.0",
+  "description": "Prototype Game server for Global Game Jam",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ggjtransmission/proto.git"
+  },
+  "author": "Aaron Eiche, Isaac Carroll, Michael Freeman, Carl Barrett, Michael Bibeax",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ggjtransmission/proto/issues"
+  },
+  "homepage": "https://github.com/ggjtransmission/proto#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "random-id": "0.0.2",
+    "ws": "^4.0.0"
+  }
+}
