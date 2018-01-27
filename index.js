@@ -2,6 +2,8 @@ const express= require('express');
 const WebSocket = require('ws');
 const randomId = require('random-id');
 
+var game = require("./game");
+
 var webport = 3000;
 
 var app = express();
@@ -29,7 +31,10 @@ wsServer.on('connection',(ws,req)=>{
   console.log("User Connected: ", ws._socket.remoteAddress);
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
-    wsServer.broadcast(JSON.stringify(message));
+
+    let result = game.process(JSON.parse(message));
+
+    wsServer.broadcast(JSON.stringify(result));
   });
 })
 
