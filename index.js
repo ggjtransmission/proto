@@ -2,8 +2,6 @@ const express= require('express');
 const WebSocket = require('ws');
 const randomId = require('random-id');
 
-var game = require("./game");
-
 var webport = 3000;
 
 var app = express();
@@ -18,7 +16,6 @@ server.listen(webport,function(){
 var wsServer = new WebSocket.Server({server});
 var wsConnections = {};
 
-
 wsServer.broadcast = function broadcast(data) {
   wsServer.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
@@ -30,11 +27,13 @@ wsServer.broadcast = function broadcast(data) {
 wsServer.on('connection',(ws,req)=>{
   console.log("User Connected: ", ws._socket.remoteAddress);
   ws.on('message', function incoming(message) {
+
+
     console.log('received: %s', message);
 
     let result = game.process(JSON.parse(message));
 
-    wsServer.broadcast(JSON.stringify(result));
+    // wsServer.broadcast(JSON.stringify(result));
   });
 })
 
@@ -43,3 +42,5 @@ wsServer.on('close',function(ws,req){
   console.log(ws)
   connections.splice(connections.indexOf(ws));
 })
+
+var game = require("./game")(wsServer);

@@ -1,34 +1,39 @@
-var game = {};
-game.players = [];
-
-game.process = function(message)
+module.exports = function (socketServer)
 {
    
-   switch(message.type){
+   var game = {};
 
-      case "register": //Registering new players
-         return game.register(message);
+   game.players = [];
 
-      break
-      default:
-         console.log("here instead");
-         return false;
-      break
+   game.process = function(message)
+   {
+      switch(message.type){
+
+         case "register": //Registering new players
+
+
+            // return game.register(message);
+            socketServer.broadcast(JSON.stringify(game.register(message)))
+
+         break;
+         default:
+            console.log("here instead");
+            return false;
+         break;
+      }
 
    }
 
-}
+   game.register = function(message)
+   {
+      game.players.push(message.name);
 
-game.register = function(message)
-{
-   game.players.push(message.name);
-
-   var returnMessage = {
-      players: game.players,
-      ...message
+      var returnMessage = {
+         players: game.players,
+         ...message
+      }
+      return returnMessage;
    }
-   return returnMessage;
+
+   return game;
 }
-
-
-module.exports = game;
