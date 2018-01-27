@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>
+      Proto Game!
+   </title>
+   <script type="text/javascript">
+      s = new WebSocket("ws://"+location.hostname+":" + location.port);
+
+      s.onopen = function(){
+         console.log("Opened Socket");
+      }
+
+      s.onclosed = function(){
+         console.log("Closed Socket");
+      }
+
+      s.onmessage = function(m)
+      {
+         var data = JSON.parse(m.data);
+         console.log(data);
+      }
+
+
+   </script>
+</head>
+<body>
+   Welcome to <i>the scourge</i>
+
+
+</body>
+</html>
