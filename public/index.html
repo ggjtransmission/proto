@@ -4,6 +4,7 @@
    <title>
       Proto Game!
    </title>
+   <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
    <script type="text/javascript">
       s = new WebSocket("ws://"+location.hostname+":" + location.port);
 
@@ -21,12 +22,28 @@
          console.log(data);
       }
 
+      //Adds a user to the game.
+      function register() {
+         var messageObject = {
+            type: "register",
+            name: $("#player_name").val()
+         }
+         s.send(JSON.stringify(messageObject));
+      }
+
+      $(document).ready(function(){
+         $(register_button).click(function()
+         {
+            register();
+         })
+      })
 
    </script>
 </head>
 <body>
    Welcome to <i>Plague Party!</i>
 
-
+   <p>Enter Your name: <input id="player_name" type="text" name="name"/></p>
+   <button id="register_button">Register</button>
 </body>
 </html>
