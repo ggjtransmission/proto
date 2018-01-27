@@ -59,7 +59,9 @@
       function updateTime(time){
          var min = Math.floor(time / 60);
          var sec = time - min * 60;
-         var prettyTime = min + ":" + sec;
+         var fsec = "" + sec
+         if (fsec.length < 2) {fsec = "0" + sec;}
+         var prettyTime = min + ":" + fsec;
          $("#timeRemaining").html(prettyTime);
       }
 
