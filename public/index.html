@@ -2,8 +2,12 @@
 <html>
 <head>
    <title>
-      Proto Game!
+      Plague Party!
    </title>
+   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+   <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
    <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
    <script type="text/javascript">
       s = new WebSocket("ws://"+location.hostname+":" + location.port);
@@ -70,18 +74,49 @@
          $(start_game).click(function(){
             sendStart();
          })
-      })
 
+         $("#instructions_button").click(function(){
+            console.log("show instructions");
+         });
+
+         $("#credits_button").click(function(){
+            console.log("show credits");
+         });
+
+      })
    </script>
+
+
 </head>
 <body>
-   Welcome to <i>Plague Party!</i>
 
-   <p>Enter Your name: <input id="player_name" type="text" name="name"/></p>
-   <button id="register_button">Register</button>
+<header class="w3-container w3-flat-midnight-blue">
+   <center>
+  <h1><i>Plague Party!</i></h1>
+</center>
+</header>
+
+<div class="w3-cell-row">
+  <div class="w3-cell">
+  </div>
+  <div class="w3-cell w3-container">
+   <div class="page" >
+
+      <p>Enter Your name: <input id="player_name" type="text" name="name"/></p>
+      <button id="register_button">Join Game</button>
+
+      <div id="timeRemaining"></div>
+      <button id="start_game">Start Game</button>
+
+   </div>
+  </div>
+</div>
+
+<footer class="w3-container w3-flat-midnight-blue">
+  <button id="instructions_button">Instructions</button>
+  <button id="credits_button">Credits</button>
+</footer>
 
 
-   <div id="timeRemaining"></div>
-   <button id="start_game">Start Game</button>
 </body>
 </html>

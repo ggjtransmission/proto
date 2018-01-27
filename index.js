@@ -28,12 +28,7 @@ wsServer.on('connection',(ws,req)=>{
   console.log("User Connected: ", ws._socket.remoteAddress);
   ws.on('message', function incoming(message) {
 
-
-    console.log('received: %s', message);
-
     let result = game.process(JSON.parse(message));
-
-    // wsServer.broadcast(JSON.stringify(result));
   });
 })
 
