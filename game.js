@@ -1,10 +1,11 @@
 module.exports = function (socketServer)
 {
+   var ALLOWED_TIME = 20 * 60;
    
    var game = {};
 
    game.players = [];
-   game.time = 30 * 60 ;
+   game.time = ALLOWED_TIME ;
    game.exists = false; 
    game.running = false;
    game.maxNumberOfPlayers = 4;
@@ -31,9 +32,9 @@ module.exports = function (socketServer)
          case "killGame":
             game.exists = false;
             game.running = false;
+            game.time = ALLOWED_TIME;
             game.numberOfRegisteredPlayers = 0;
             game.players = [];
-            //socketServer.broadcast(JSON.stringify({"type":"time","message":game.time, "maxNumberOfPlayers": game.maxNumberOfPlayers, "numberOfRegisteredPlayers": game.numberOfRegisteredPlayers}))
             socketServer.broadcast(JSON.stringify({"type":"reset"}));
          break;
          default:
