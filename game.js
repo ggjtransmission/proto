@@ -11,6 +11,12 @@ module.exports = function (socketServer)
    game.maxNumberOfPlayers = 4;
    game.numberOfRegisteredPlayers = 3;
 
+   game.numberOfsymptoms = 4;
+   game.numberOfItemsToPass = 2;
+   //Solutions arrays
+   game.humoursCodeArray = [];
+   game.symptomsCodeArray = [];
+
 
    game.process = function(message, ws)
    {
@@ -31,11 +37,18 @@ module.exports = function (socketServer)
             console.log("Register new player in game.js")
             game.numberOfRegisteredPlayers ++;
             socketServer.broadcast(JSON.stringify(game.register(message)))
+            //We have the necessary amount of players, so we start the game
             if(game.numberOfRegisteredPlayers === game.maxNumberOfPlayers){
+               game.createCode();
                game.running = true;
                socketServer.broadcast(JSON.stringify({"type":"start","message":game.time, "maxNumberOfPlayers": game.maxNumberOfPlayers, "numberOfRegisteredPlayers": game.numberOfRegisteredPlayers}))
             }
+         break;   
+         case "examine":
+            console.log("examine player in game.js")
+            game.examine(message.humArray, message.symArray, message.id);
          break;
+         //debug function so that we can test restart
          case "killGame":
             game.exists = false;
             game.running = false;
@@ -64,6 +77,102 @@ module.exports = function (socketServer)
       }
       console.log("returnMessage " + returnMessage.name)
       return returnMessage;
+   }
+
+   game.createCode = function(){
+      var humours = [1,2,3,4]
+      var symptoms = ["A","B","C","D"]
+      for(var i = 0; i < game.numberOfsymptoms; i++){
+         //Find random position 
+         //(Note: we use the length of the avalible options for the
+         //random number as we could have 40 options we can chose from
+         //, but we only want a subset of the avalible options)
+         var tempRand = Math.floor(Math.random() * (humours.length));
+         //Add random humour to ith item in the solution array
+         game.humoursCodeArray[i] = humours[tempRand];
+         //Remove the humour from avalible humours list
+         humours.splice(tempRand, 1);
+         tempRand = Math.floor(Math.random() * (symptoms.length));
+         game.symptomsCodeArray[i] = symptoms[tempRand];
+         symptoms.splice(tempRand, 1);
+      }
+      for(var j = 0; j < game.numberOfsymptoms; j++){
+         console.log("position " + j + " " + game.humoursCodeArray[j]);
+      }
+      for(var k = 0; k < game.numberOfsymptoms; k++){
+         console.log("position " + k + " " + game.symptomsCodeArray[k]);
+      }
+   }
+
+   game.examine = function(userHumoursArray, userSymptomsArray, userId){
+      var tempPosChosen = -1;
+      var tempOpenPosArray = [];
+      var openPos = 0;
+      var humArrayFull = false;
+      var symArrayFull = false;
+      console.log("in the examine FUNCTION")
+      //Iterate through for as many items as need to be passed.
+      for(var i = 0; i < game.numberOfItemsToPass; i++){
+         //Randomly choose which array to look at
+         if(Math.floor(Math.random() * 2) === 0){
+            if(!humArrayFull){
+               //Make array of open positions
+               for(var k = 0; k < game.numberOfsymptoms; k++){
+                  if(userHumoursArray[k] === "#"){
+                     tempOpenPosArray[openPos] = k;
+                     openPos++;
+                  }
+               }
+               if(openPos != 0){
+                  //random pick of open position
+                  tempPosChosen = tempOpenPosArray[Math.floor(Math.random() * tempOpenPosArray.length)]
+                  //Use random open position to get value from the solution array
+                  //and add that value into the postion on the userArray that
+                  //we will then transmit back to the user
+                  console.log("Setting h openPos: " + tempPosChosen + " to: " + game.humoursCodeArray[tempPosChosen])
+                  userHumoursArray[tempPosChosen] = game.humoursCodeArray[tempPosChosen];
+                  //reset temp vars in case we iterate on the for loop again
+                  openPos = 0;
+                  tempOpenPosArray = [];
+                  tempPosChosen = -1;
+               }else{
+                  humArrayFull = true;
+               }
+            }else{
+               i = i-1;
+            }
+         }else{
+            if(!symArrayFull){
+               //Make array of open positions
+               for(var k = 0; k < game.numberOfsymptoms; k++){
+                  if(userSymptomsArray[k] === "#"){
+                     tempOpenPosArray[openPos] = k;
+                     openPos++;
+                  }
+               }
+               if(openPos != 0){
+                  //random pick of open position
+                  console.log("tempOpenPosArray.length = " + tempOpenPosArray.length)
+                  tempPosChosen = tempOpenPosArray[Math.floor(Math.random() * tempOpenPosArray.length)]
+                  //Use random open position to get value from the solution array
+                  //and add that value into the postion on the userArray that
+                  //we will then transmit back to the user
+                  //YOU ARE DOING SOMETHING WRONG WITH ITERATOR IDS
+                  console.log("Setting s openPos: " + tempPosChosen + " to: " + game.symptomsCodeArray[tempPosChosen])
+                  userSymptomsArray[tempPosChosen] = game.symptomsCodeArray[tempPosChosen];
+                  //reset temp vars in case we iterate on the for loop again
+                  openPos = 0;
+                  tempOpenPosArray = [];
+                  tempPosChosen = -1;
+               }else{
+                  symArrayFull = true;
+               }
+            }else{
+               i = i-1;
+            }
+         }
+      }
+      socketServer.broadcast(JSON.stringify({"type":"examine","userHumoursArray":userHumoursArray,"userSymptomsArray":userSymptomsArray, "userId":userId}))
    }
 
    setInterval(function(){
