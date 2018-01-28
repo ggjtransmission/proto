@@ -14,6 +14,9 @@
 
       var curPage = "start_page";
       var prevPage = "start_page";
+      var screen = {};
+      screen.width = $(window).width();
+      screen.height = $(window).height();
 
       s.onopen = function(){
          console.log("Opened Socket");
@@ -40,7 +43,11 @@
                updateTime(data.message);
                //Updates the counter of registered players
                $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
-               $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);   
+               $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
+               if(data.numberOfRegisteredPlayers === data.maxNumberOfPlayers){
+                  $("#header").hide();
+                  switchPage("disease_page");
+               } 
             break;
             case "register":
                //Updates the counter of registered players
@@ -243,6 +250,47 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
       <p>Game</p>
       <p>in</p>
       <p>progress</p>
+      </center>
+   </div>
+  </div>
+</div>
+
+<!-- Disease in progress page -->
+<div class="w3-cell-row">
+  <div class="w3-cell">
+  </div>
+  <div class="w3-cell w3-container">
+   <div hidden class="page" id="disease_page" >
+      <center>
+         <p>Disease is on the rise</p>
+         <p id=timeRemaining></p>
+         <p>Left to find a Cure</p>
+         <p>Here is what we know</p>
+         <div class="symptoms-container">
+            <div class="symptom-item">1</div>
+            <div class="symptom-item">2</div>
+            <div class="symptom-item">3</div>
+            <div class="symptom-item">4</div>
+         </div>
+         <div class="humours-container">
+            <div class="humour-item">A</div>
+            <div class="humour-item">B</div>
+            <div class="humour-item">C</div>
+            <div class="humour-item">D</div>
+         </div>
+         <div class="pairs-container">
+            <div class="pair-item">A3</div>
+            <div class="pair-item">B1</div>
+            <div class="pair-item"></div>
+            <div class="pair-item"></div>
+            <div class="pair-item"></div>
+            <div class="pair-item"></div>
+            <div class="pair-item"></div>
+            <div class="pair-item"></div>
+         </div>
+            <input id="patient_code" type="text" name="patientCode" placeholder="Patient Code"/>
+            <button id="attempt-cure_button">Attempt<br/>cure</button>
+            <button id="examine_button">Examine</button>
       </center>
    </div>
   </div>

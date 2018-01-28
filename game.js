@@ -8,7 +8,7 @@ module.exports = function (socketServer)
    game.exists = false; 
    game.running = false;
    game.maxNumberOfPlayers = 4;
-   game.numberOfRegisteredPlayers = 0;
+   game.numberOfRegisteredPlayers = 3;
 
 
    game.process = function(message)
@@ -25,7 +25,7 @@ module.exports = function (socketServer)
             socketServer.broadcast(JSON.stringify(game.register(message)))
             if(game.numberOfRegisteredPlayers === game.maxNumberOfPlayers){
                game.running = true;
-               socketServer.broadcast(JSON.stringify({"type":"time","message":game.time}))
+               socketServer.broadcast(JSON.stringify({"type":"time","message":game.time, "maxNumberOfPlayers": game.maxNumberOfPlayers, "numberOfRegisteredPlayers": game.numberOfRegisteredPlayers}))
             }
          break;
          case "returnHome":
