@@ -7,6 +7,8 @@ module.exports = function (socketServer)
    game.time = 30 * 60 ;
    game.exists = false; 
    game.running = false;
+   game.maxNumberOfPlayers = 4;
+   game.numberOfRegisteredPlayers = 0;
 
 
    game.process = function(message)
@@ -19,16 +21,19 @@ module.exports = function (socketServer)
          break;
          case "register": //Registering new players
             console.log("Register new player in game.js")
+            game.numberOfRegisteredPlayers ++;
             socketServer.broadcast(JSON.stringify(game.register(message)))
-         break;
-         case "start":
-            game.running = true;
-            socketServer.broadcast(JSON.stringify({"type":"time","message":game.time}))
+            if(game.numberOfRegisteredPlayers === game.maxNumberOfPlayers){
+               game.running = true;
+               socketServer.broadcast(JSON.stringify({"type":"time","message":game.time}))
+            }
          break;
          case "returnHome":
             game.exists = false;
             game.running = false;
-            socketServer.broadcast(JSON.stringify({"type":"time","message":game.time}))
+            game.numberOfRegisteredPlayers = 0;
+            game.players = [];
+            socketServer.broadcast(JSON.stringify({"type":"time","message":game.time, "maxNumberOfPlayers": game.maxNumberOfPlayers, "numberOfRegisteredPlayers": game.numberOfRegisteredPlayers}))
          break;
          default:
             console.log("here instead");
@@ -44,8 +49,11 @@ module.exports = function (socketServer)
 
       var returnMessage = {
          players: game.players,
+         maxNumberOfPlayers: game.maxNumberOfPlayers,
+         numberOfRegisteredPlayers: game.numberOfRegisteredPlayers,
          ...message
       }
+      console.log("returnMessage " + returnMessage.name)
       return returnMessage;
    }
 

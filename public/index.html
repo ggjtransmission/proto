@@ -12,6 +12,9 @@
    <script type="text/javascript">
       s = new WebSocket("ws://"+location.hostname+":" + location.port);
 
+      var curPage = "start_page";
+      var prevPage = "start_page";
+
       s.onopen = function(){
          console.log("Opened Socket");
       }
@@ -23,6 +26,7 @@
       s.onmessage = function(m)
       {
          var data = JSON.parse(m.data);
+         console.log(m.data)
          processMessage(data);
       }
 
@@ -34,9 +38,15 @@
             case "time":
             // console.log("update time");
                updateTime(data.message);
+               //Updates the counter of registered players
+               $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
+               $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);   
             break;
             case "register":
-
+               //Updates the counter of registered players
+               $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
+               $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);            
+               console.log("data.message " + data.numberOfRegisteredPlayers)
             break;
          }
       }
@@ -96,18 +106,47 @@
 
          $("#instructions_button").click(function(){
             console.log("show instructions");
+            $("#footer").hide();
+            $("#close_button").show();
+            $("#headerText").text("Instructions");   
+            prevPage =  curPage;
+            switchPage("instructions_page");
          });
 
          $("#credits_button").click(function(){
             console.log("show credits");
+            $("#footer").hide();
+            $("#subpageFooter").show();
+            $("#close_button").show();
+            $("#headerText").text("Credits"); 
+            prevPage =  curPage;
+            switchPage("credits_page");
+         });
+
+         $("#kill_button").click(function(){
+            console.log("show credits");
+            $("#footer").show();
+            $("#subpageFooter").hide();
+            $("#close_button").hide();
+            $("#headerText").text("Plague Party");
             goHome();
             switchPage("start_page");
+         });
+
+         $("#close_button").click(function(){
+            $("#footer").show();
+            $("#subpageFooter").hide();
+            $("#close_button").hide();
+            $("#headerText").text("Plague Party");
+            switchPage(prevPage);
          });
 
       })
 
       function switchPage(pageId)
       {
+         prevPage =  curPage;
+         curPage = pageId;
          console.log("page Id  = " + pageId)
          $(".page").hide();
          $("#"+pageId).show();
@@ -120,8 +159,11 @@
 
 <header class="w3-container w3-flat-midnight-blue">
    <center>
-      <h1><i>Plague Party!</i></h1>
+      <h1 id=headerText><i>Plague Party!</i></h1>
    </center>
+   <right>      
+      <button hidden id="close_button" >X</button>
+   </right>
 </header>
 
 <!-- Home page -->
@@ -145,9 +187,11 @@
   </div>
   <div class="w3-cell w3-container">
    <div hidden class="page" id="join_page" >
-
-      <p>Enter Your name: <input id="player_name" type="text" name="name"/></p>
       <center>
+         <p>Enter Your name:</p>
+         <input id="player_name" type="text" name="name"/>
+         <p id="player_count"> 0 / 4 </p>
+         <p>Players Joined</p>
          <button id="join_button">Join Game</button>
       </center>
    </div>
@@ -161,9 +205,11 @@
   <div class="w3-cell w3-container">
    <div hidden  class="page" id="lobby_page" >
       <center>
-      <p>A breakout has occured ...</p>
-      <p>Waiting for game to start</p>
-      <p>A breakout has occured ...</p>
+         <p>A breakout has occured ...</p>
+         <p>Waiting for game to start</p>
+         <p>A breakout has occured ...</p>
+         <p id="player_count1"> 0 / 4 </p>
+         <p>Players Joined</p>
       </center>
    </div>
   </div>
@@ -184,9 +230,39 @@
   </div>
 </div>
 
-<footer class="w3-container w3-flat-midnight-blue">
+<!-- Instructions page -->
+<div class="w3-cell-row">
+  <div class="w3-cell">
+  </div>
+  <div class="w3-cell w3-container">
+   <div hidden class="page" id="instructions_page" >
+      <center>
+      <p>Text here</p>
+      </center>
+   </div>
+  </div>
+</div>
+
+<!-- Credits page -->
+<div class="w3-cell-row">
+  <div class="w3-cell">
+  </div>
+  <div class="w3-cell w3-container">
+   <div hidden class="page" id="credits_page" >
+      <center>
+      <p>Text here</p>
+      </center>
+   </div>
+  </div>
+</div>
+
+<footer id=footer class="w3-container w3-flat-midnight-blue">
   <button id="instructions_button">Instructions</button>
   <button id="credits_button">Credits</button>
+</footer>
+
+<footer hidden id=subpageFooter class="w3-container w3-flat-midnight-blue">
+  <button id="kill_button">Kill</button>
 </footer>
 
 
