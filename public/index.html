@@ -35,6 +35,23 @@
          console.log("message data: " + data)
          switch(data.type)
          {
+            case "reset":
+               document.location = "/";
+            break;
+            case "newconnection":
+               console.log("new connection %o", data);
+               if (data.game_exists) {
+                  if (data.game_running) {
+                     switchPage("game_in_progress_page");
+                  }
+                  else {
+                     switchPage("join_page");
+                  }
+               }
+               else {
+                  switchPage("start_page");
+               }
+            break;
             case "time":
             // console.log("update time");
                updateTime(data.message);
@@ -47,6 +64,10 @@
                $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
                $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);            
                console.log("data.message " + data.numberOfRegisteredPlayers)
+            break;
+            case "gamecreated":
+               // someone has created a new game
+               switchPage("join_page");
             break;
          }
       }
@@ -65,7 +86,7 @@
       function goHome() {
          console.log("return to home from join")
          var messageObject = {
-            type: "returnHome",
+            type: "killGame",
          }
          s.send(JSON.stringify(messageObject));
       }
@@ -101,7 +122,10 @@
          });
 
          $("#create-game_button").click(function(){
-            switchPage("join_page");
+            var messageObject = {
+               type: "create",
+            }
+            s.send(JSON.stringify(messageObject));
          });
 
          $("#instructions_button").click(function(){
@@ -188,7 +212,7 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
   <div class="w3-cell">
   </div>
   <div class="w3-cell w3-container">
-   <div class="page" id="start_page" >
+   <div hidden class="page" id="start_page" >
       <center>
          <p>The game of socially transmitted diseases.</p>
          <img src="PlagueParty2.png" alt="" width="363" height="388.5">
