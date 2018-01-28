@@ -55,9 +55,17 @@
                   switchPage("start_page");
                }
             break;
-            case "time":
-            // console.log("update time");
-               updateTime(data.message);
+            case "gamecreated":
+               // someone has created a new game
+               switchPage("join_page");
+            break;
+            case "register":
+               //Updates the counter of registered players
+               $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
+               $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);            
+               console.log("data.message " + data.numberOfRegisteredPlayers)
+            break;
+            case "start":
                //Updates the counter of registered players
                $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
                $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
@@ -66,15 +74,9 @@
                   switchPage("disease_page");
                } 
             break;
-            case "register":
-               //Updates the counter of registered players
-               $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
-               $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);            
-               console.log("data.message " + data.numberOfRegisteredPlayers)
-            break;
-            case "gamecreated":
-               // someone has created a new game
-               switchPage("join_page");
+            case "time":
+            // console.log("update time");
+               updateTime(data.message);
             break;
          }
       }

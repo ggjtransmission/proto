@@ -26,7 +26,7 @@ module.exports = function (socketServer)
             socketServer.broadcast(JSON.stringify(game.register(message)))
             if(game.numberOfRegisteredPlayers === game.maxNumberOfPlayers){
                game.running = true;
-               socketServer.broadcast(JSON.stringify({"type":"time","message":game.time, "maxNumberOfPlayers": game.maxNumberOfPlayers, "numberOfRegisteredPlayers": game.numberOfRegisteredPlayers}))
+               socketServer.broadcast(JSON.stringify({"type":"start","message":game.time, "maxNumberOfPlayers": game.maxNumberOfPlayers, "numberOfRegisteredPlayers": game.numberOfRegisteredPlayers}))
             }
          break;
          case "killGame":
