@@ -75,6 +75,7 @@
       //Adds a user to the game.
       function register() {
          console.log("Call register function")
+         $("player_code").text($("#player_name"));
          var messageObject = {
             type: "register",
             name: $("#player_name").val()
@@ -322,6 +323,7 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
 
 <footer id=footer class="w3-container w3-flat-midnight-blue">
   <button id="instructions_button">Instructions</button>
+  <label id="player_code"></label>
   <button id="credits_button">Credits</button>
 </footer>
 
