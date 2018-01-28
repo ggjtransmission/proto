@@ -27,6 +27,7 @@ wsServer.broadcast = function broadcast(data) {
 
 wsServer.on('connection',(ws,req)=>{
   console.log("User Connected: ", ws._socket.remoteAddress);
+  ws.send(JSON.stringify({type:"newconnection",game_exists:game.exists,game_running:game.running}));
   ws.on('message', function incoming(message) {
     console.log("message = " + message)
     let result = game.process(JSON.parse(message));

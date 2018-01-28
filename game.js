@@ -17,7 +17,7 @@ module.exports = function (socketServer)
 
          case "create": //Create new game
             game.exists = true;
-            socketServer.broadcast(JSON.stringify({"game":"created"}))
+            socketServer.broadcast(JSON.stringify({"type":"gamecreated"}))
          break;
          case "register": //Registering new players
             console.log("Register new player in game.js")
@@ -28,12 +28,13 @@ module.exports = function (socketServer)
                socketServer.broadcast(JSON.stringify({"type":"time","message":game.time}))
             }
          break;
-         case "returnHome":
+         case "killGame":
             game.exists = false;
             game.running = false;
             game.numberOfRegisteredPlayers = 0;
             game.players = [];
-            socketServer.broadcast(JSON.stringify({"type":"time","message":game.time, "maxNumberOfPlayers": game.maxNumberOfPlayers, "numberOfRegisteredPlayers": game.numberOfRegisteredPlayers}))
+            //socketServer.broadcast(JSON.stringify({"type":"time","message":game.time, "maxNumberOfPlayers": game.maxNumberOfPlayers, "numberOfRegisteredPlayers": game.numberOfRegisteredPlayers}))
+            socketServer.broadcast(JSON.stringify({"type":"reset"}));
          break;
          default:
             console.log("here instead");
