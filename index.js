@@ -35,7 +35,7 @@ wsServer.on('connection',(ws,req)=>{
   }));
   ws.on('message', function incoming(message) {
     console.log("message = " + message)
-    let result = game.process(JSON.parse(message));
+    let result = game.process(JSON.parse(message), ws);
   });
 })
 

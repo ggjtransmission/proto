@@ -65,6 +65,12 @@
                $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);            
                console.log("data.message " + data.numberOfRegisteredPlayers)
             break;
+            case "duplicate_name":
+               // duplicate name chosen, try again
+               $("#player_code").text("");
+               $("#duplicate_msg").text("Name is in use, choose another.");
+               switchPage("join_page");
+            break;
             case "start":
                //Updates the counter of registered players
                $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
@@ -240,6 +246,7 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
   <div class="w3-cell w3-container">
    <div hidden class="page" id="join_page" >
       <center>
+         <p id="duplicate_msg"></p>
          <p>Enter Your name:</p>
          <input id="player_name" type="text" name="name"/>
          <p id="player_count"> 0 / 4 </p>

@@ -12,7 +12,7 @@ module.exports = function (socketServer)
    game.numberOfRegisteredPlayers = 3;
 
 
-   game.process = function(message)
+   game.process = function(message, ws)
    {
       switch(message.type){
 
@@ -21,6 +21,13 @@ module.exports = function (socketServer)
             socketServer.broadcast(JSON.stringify({"type":"gamecreated"}))
          break;
          case "register": //Registering new players
+            if (game.players.indexOf(message.name) != -1) {
+               // duplicate name found
+               ws.send(JSON.stringify({type:"duplicate_name"}));
+               break;
+            }
+
+            // name is unique
             console.log("Register new player in game.js")
             game.numberOfRegisteredPlayers ++;
             socketServer.broadcast(JSON.stringify(game.register(message)))
