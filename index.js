@@ -7,6 +7,7 @@ var webport = 3000;
 var app = express();
 
 app.use(express.static('public'));
+app.use(express.static('Sound'));
 var server = require('http').createServer(app);
 
 server.listen(webport,function(){

@@ -153,11 +153,28 @@
       }
 
    </script>
-   
+
+   <script type="text/javascript">
+function togglemusic() {
+  if (document.getElementById("soundtoggle").checked == true) {
+    document.getElementById("backgroundmusic").play();
+  }
+  else {
+    document.getElementById("backgroundmusic").pause();
+  }
+}
+
+var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
+   </script>
+
 </head>
 <body>
 
 <header class="w3-container w3-flat-midnight-blue">
+   <label class="container">sound
+     <input id="soundtoggle" type="checkbox" onclick="togglemusic()"/>
+   </label>
+   <audio id="backgroundmusic" src="Devil_Music_-_37_-_Plague.mp3" preload="auto" hidden controls></audio>
    <center>
       <h1 id=headerText><i>Plague Party!</i></h1>
    </center>
@@ -173,9 +190,10 @@
   <div class="w3-cell w3-container">
    <div class="page" id="start_page" >
       <center>
-         <p>"Funny Quote"</p>
+         <p>The game of socially transmitted diseases.</p>
          <img src="PlagueParty2.png" alt="" width="363" height="388.5">
          <button id="create-game_button">Create Game</button>
+         <button id="squishsound" onclick="squish.play()">SQUISH</button>
       </center>
    </div>   
   </div>
