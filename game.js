@@ -47,7 +47,7 @@ module.exports = function (socketServer)
          break;   
          case "examine":
             console.log("examine player in game.js")
-            game.examine(message.humArray, message.symArray, message.id);
+            game.examine(message.humArray, message.symArray, message.humTrackArray, message.symTrackArray, message.id);
          break;
          case "foundPair":
             console.log("one user found a pair")
@@ -122,7 +122,7 @@ module.exports = function (socketServer)
       }
    }
 
-   game.examine = function(userHumoursArray, userSymptomsArray, userId){
+   game.examine = function(userHumoursArray, userSymptomsArray, userHTrackArray, userSTrackArray, userId){
       var tempPosChosen = -1;
       var tempOpenPosArray = [];
       var openPos = 0;
@@ -136,7 +136,7 @@ module.exports = function (socketServer)
             if(!humArrayFull){
                //Make array of open positions
                for(var k = 0; k < game.numberOfsymptoms; k++){
-                  if(userHumoursArray[k] === "#"){
+                  if(userHTrackArray[k] === 0){
                      tempOpenPosArray[openPos] = k;
                      openPos++;
                   }
@@ -149,6 +149,8 @@ module.exports = function (socketServer)
                   //we will then transmit back to the user
                   console.log("Setting h openPos: " + tempPosChosen + " to: " + game.humoursCodeArray[tempPosChosen])
                   userHumoursArray[tempPosChosen] = game.humoursCodeArray[tempPosChosen];
+                  //Update the tracking array to know that a value is true
+                  userHTrackArray[tempPosChosen] = 1;
                   //reset temp vars in case we iterate on the for loop again
                   openPos = 0;
                   tempOpenPosArray = [];
@@ -164,7 +166,7 @@ module.exports = function (socketServer)
             if(!symArrayFull){
                //Make array of open positions
                for(var k = 0; k < game.numberOfsymptoms; k++){
-                  if(userSymptomsArray[k] === "#"){
+                  if(userSTrackArray[k] === 0){
                      tempOpenPosArray[openPos] = k;
                      openPos++;
                   }
@@ -176,9 +178,10 @@ module.exports = function (socketServer)
                   //Use random open position to get value from the solution array
                   //and add that value into the postion on the userArray that
                   //we will then transmit back to the user
-                  //YOU ARE DOING SOMETHING WRONG WITH ITERATOR IDS
                   console.log("Setting s openPos: " + tempPosChosen + " to: " + game.symptomsCodeArray[tempPosChosen])
                   userSymptomsArray[tempPosChosen] = game.symptomsCodeArray[tempPosChosen];
+                  //Update the tracking array to know that a value is true
+                  userSTrackArray[tempPosChosen] = 1;
                   //reset temp vars in case we iterate on the for loop again
                   openPos = 0;
                   tempOpenPosArray = [];
@@ -192,7 +195,7 @@ module.exports = function (socketServer)
             }
          }
       }
-      socketServer.broadcast(JSON.stringify({"type":"examine","userHumoursArray":userHumoursArray,"userSymptomsArray":userSymptomsArray, "userId":userId}))
+      socketServer.broadcast(JSON.stringify({"type":"examine","userHumoursArray":userHumoursArray,"userSymptomsArray":userSymptomsArray, "userHTrackArray":userHTrackArray, "userSTrackArray":userSTrackArray, "userId":userId}))
    }
 
    setInterval(function(){

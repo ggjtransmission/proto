@@ -20,7 +20,12 @@
       var userId = "";
       var humoursArray = ["#","#","#","#"];
       var symptomsArray = ["#","#","#","#"];
-      var knownPairs = ["##","##","##","##"]
+      var knownPairs = ["##","##","##","##"];
+      //These keep track if the data in the data
+      //in the display is 1 - fact, or 0 - null or guess
+      var hTrackArray = [0,0,0,0];
+      var sTrackArray = [0,0,0,0];
+
 
       s.onopen = function(){
          console.log("Opened Socket");
@@ -103,12 +108,42 @@
                   // console.log("updating the user's arrays")
                   humoursArray = data.userHumoursArray;
                   symptomsArray = data.userSymptomsArray;
+                  hTrackArray = data.userHTrackArray;
+                  sTrackArray = data.userSTrackArray;
                }
                //This updates the humours and symptoms
                for(var i = 0; i < humoursArray.length; i++){
                   // console.log("updating array pos: " + i)
-                  $("#humour-item" + i).text(humoursArray[i]);  
-                  $("#symptom-item" + i).text(symptomsArray[i]);          
+                  //Set colors of h&s items depending on their state
+                  switch(hTrackArray[i]){
+                     case 0:
+                     //Figure out color later
+                        // if(humoursArray[i] == "#"){
+                           document.getElementById("humour-item" + i).style.color = "black";
+                        // }else{
+                        //    document.getElementById("humour-item" + i).style.color = "orange";
+                        // }
+                     break;
+                     case 1:
+                           document.getElementById("humour-item" + i).style.color = "green";
+                           document.getElementById("humour-item" + i).disabled = true;                       
+                     break;
+                  }
+                  switch(sTrackArray[i]){
+                     case 0:
+                        // if(symptomsArray[i] == "#"){
+                           document.getElementById("symptom-item" + i).style.color = "black";
+                        // }else{
+                        //    document.getElementById("symptom-item" + i).style.color = "orange";
+                        // }
+                     break;
+                     case 1:
+                           document.getElementById("symptom-item" + i).style.color = "green";
+                           document.getElementById("symptom-item" + i).disabled = true;                       
+                     break;
+                  }
+                  document.getElementById("humour-item" + i).value = humoursArray[i];  
+                  document.getElementById("symptom-item" + i).value = symptomsArray[i];          
                }
                //Now check for new known pairs.
                //If there is a new pair you know about,
@@ -195,6 +230,8 @@
             type: "examine",
             humArray: humoursArray,
             symArray: symptomsArray,
+            humTrackArray: hTrackArray,
+            symTrackArray: sTrackArray,
             id: userId
          }
          s.send(JSON.stringify(messageObject));
@@ -392,17 +429,25 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
             Here is what we know...</p>
          <p>Humours Known: </p>
          <div class="humours-container">
-            <div class="humour-item"><p id="humour-item0">#</p></div>
-            <div class="humour-item"><p id="humour-item1">#</p></div>
-            <div class="humour-item"><p id="humour-item2">#</p></div>
-            <div class="humour-item"><p id="humour-item3">#</p></div>
+            <div class="humour-item">
+         <input id="humour-item0" type="text" value="#" /></div>
+            <div class="humour-item">
+         <input id="humour-item1" type="text" value="#" /></div>
+            <div class="humour-item">
+         <input id="humour-item2" type="text" value="#" /></div>
+            <div class="humour-item">
+         <input id="humour-item3" type="text" value="#" /></div>
          </div>
          <p>Symptoms Known: </p>
          <div class="symptoms-container">
-            <div class="symptom-item"><p id="symptom-item0">#</p></div>
-            <div class="symptom-item"><p id="symptom-item1">#</p></div>
-            <div class="symptom-item"><p id="symptom-item2">#</p></div>
-            <div class="symptom-item"><p id="symptom-item3">#</p></div>
+            <div class="symptom-item">
+         <input id="symptom-item0" type="text"  value="#" /></div>
+            <div class="symptom-item">
+         <input id="symptom-item1" type="text"  value="#" /></div>
+            <div class="symptom-item">
+         <input id="symptom-item2" type="text"  value="#" /></div>
+            <div class="symptom-item">
+         <input id="symptom-item3" type="text"  value="#" /></div>
          </div>
          <p>Known Pairs: </p>
          <div class="pairs-container">
