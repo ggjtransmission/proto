@@ -137,6 +137,7 @@ module.exports = function (socketServer)
                   tempPosChosen = -1;
                }else{
                   humArrayFull = true;
+                  i = i-1;
                }
             }else{
                i = i-1;
@@ -166,6 +167,7 @@ module.exports = function (socketServer)
                   tempPosChosen = -1;
                }else{
                   symArrayFull = true;
+                  i = i-1;
                }
             }else{
                i = i-1;
