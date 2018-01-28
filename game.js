@@ -16,6 +16,7 @@ module.exports = function (socketServer)
    //Solutions arrays
    game.humoursCodeArray = [];
    game.symptomsCodeArray = [];
+   game.knownPairArray = [];
 
 
    game.process = function(message, ws)
@@ -47,6 +48,23 @@ module.exports = function (socketServer)
          case "examine":
             console.log("examine player in game.js")
             game.examine(message.humArray, message.symArray, message.id);
+         break;
+         case "foundPair":
+            console.log("one user found a pair")
+            //Add the found pair to the foundPairArray if it is
+            //not already in there.
+            //We do this check incase mutliple users send us
+            //the same array.
+            var tempPairExists = false;
+            for(var i = 0; i < game.knownPairArray.length; i++){
+               if(message.newPair === game.knownPairArray[i]){
+                  tempPairExists = true;
+               }
+            }
+            if(!tempPairExists){
+               game.knownPairArray.push(message.newPair);
+            }
+            socketServer.broadcast(JSON.stringify({"type":"foundPair","knownPairs":game.knownPairArray}));
          break;
          //debug function so that we can test restart
          case "killGame":

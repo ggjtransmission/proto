@@ -20,6 +20,7 @@
       var userId = "";
       var humoursArray = ["#","#","#","#"];
       var symptomsArray = ["#","#","#","#"];
+      var knownPairs = ["##","##","##","##"]
 
       s.onopen = function(){
          console.log("Opened Socket");
@@ -109,6 +110,36 @@
                   $("#humour-item" + i).text(humoursArray[i]);  
                   $("#symptom-item" + i).text(symptomsArray[i]);          
                }
+               //Now check for new known pairs.
+               //If there is a new pair you know about,
+               //then send it to the server for distribution.
+               for(var k = 0; k < humoursArray.length; k++){
+                  if(humoursArray[k] != "#" && symptomsArray[k] != "#"){
+                     //Then we have a pair.
+                     var newPair = humoursArray[k] + " " + symptomsArray[k];
+                     //Now check if pair already exists in known 
+                     //pairs. If not, send it to the server for 
+                     //distribution.
+                     var tempPairExists = false;
+                     for(var i = 0; i < knownPairs.length; i++){
+                        if(newPair === knownPairs[i]){
+                           tempPairExists = true;
+                        }
+                     }
+                     if(!tempPairExists){
+                        sendNewPair(newPair);
+                     }
+                  }
+               }
+            break;
+            case "foundPair":
+               console.log("pair found");
+               knownPairs = data.knownPairs;
+               //This updates the found pairs
+               for(var i = 0; i < knownPairs.length; i++){
+                  // console.log("updating array pos: " + i)
+                  $("#pair-item" + i).text(knownPairs[i]);            
+               }
             break;
             case "time":
             // console.log("update time");
@@ -164,6 +195,17 @@
             type: "examine",
             humArray: humoursArray,
             symArray: symptomsArray,
+            id: userId
+         }
+         s.send(JSON.stringify(messageObject));
+      }
+
+      //Runs examine function to update models.
+      function sendNewPair(newMatchedPair) {
+         console.log("send new pair function")
+         var messageObject = {
+            type: "foundPair",
+            newPair: newMatchedPair,
             id: userId
          }
          s.send(JSON.stringify(messageObject));
@@ -362,14 +404,10 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
             <div class="symptom-item"><p id="symptom-item3">#</p></div>
          </div>
          <div class="pairs-container">
-            <div class="pair-item">A3</div>
-            <div class="pair-item">B1</div>
-            <div class="pair-item"></div>
-            <div class="pair-item"></div>
-            <div class="pair-item"></div>
-            <div class="pair-item"></div>
-            <div class="pair-item"></div>
-            <div class="pair-item"></div>
+            <div class="pair-item"><p id="pair-item0">##</p></div>
+            <div class="pair-item"><p id="pair-item1">##</p></div>
+            <div class="pair-item"><p id="pair-item2">##</p></div>
+            <div class="pair-item"><p id="pair-item3">##</p></div>
          </div>
             <input id="patient_code" type="text" name="patientCode" placeholder="Patient Name"/>
             <button id="attempt-cure_button">Attempt<br/>cure</button>
