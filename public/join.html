@@ -9,7 +9,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
    <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
-<!--    <script type="text/javascript">
+   <script type="text/javascript">
       s = new WebSocket("ws://"+location.hostname+":" + location.port);
 
       s.onopen = function(){
@@ -28,6 +28,7 @@
 
       function processMessage(data)
       {
+         console.log("message data: " + data)
          switch(data.type)
          {
             case "time":
@@ -42,6 +43,7 @@
 
       //Adds a user to the game.
       function register() {
+         console.log("Call register function")
          var messageObject = {
             type: "register",
             name: $("#player_name").val()
@@ -49,19 +51,19 @@
          s.send(JSON.stringify(messageObject));
       }
 
-      function sendStart(){
-            var messageObject = {
-            type: "start",
-         }
-         s.send(JSON.stringify(messageObject));
-      }
+      // function sendStart(){
+      //       var messageObject = {
+      //       type: "start",
+      //    }
+      //    s.send(JSON.stringify(messageObject));
+      // }
 
-      function updateTime(time){
-         var min = Math.floor(time / 60);
-         var sec = time - min * 60;
-         var prettyTime = min + ":" + sec;
-         $("#timeRemaining").html(prettyTime);
-      }
+      // function updateTime(time){
+      //    var min = Math.floor(time / 60);
+      //    var sec = time - min * 60;
+      //    var prettyTime = min + ":" + sec;
+      //    $("#timeRemaining").html(prettyTime);
+      // }
 
       $(document).ready(function(){
          // $(register_button).click(function()
@@ -73,6 +75,12 @@
          //    sendStart();
          // })
 
+         $(join_button).click(function()
+         {
+            console.log("Clicked join button registering the user")
+            register();
+         })
+
          $("#instructions_button").click(function(){
             console.log("show instructions");
          });
@@ -83,13 +91,13 @@
 
       })
 
-      function switchPage(pageId)
-      {
-         $(".page").hide();
-         $("#"+pageId).show();
-      }
+      // function switchPage(pageId)
+      // {
+      //    $(".page").hide();
+      //    $("#"+pageId).show();
+      // }
 
-   </script> -->
+   </script>
 
 
 </head>

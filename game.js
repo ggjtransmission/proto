@@ -18,6 +18,7 @@ module.exports = function (socketServer)
             socketServer.broadcast(JSON.stringify({"game":"created"}))
          break;
          case "register": //Registering new players
+            console.log("Register new player in game.js")
             socketServer.broadcast(JSON.stringify(game.register(message)))
          break;
          case "start":
@@ -29,7 +30,7 @@ module.exports = function (socketServer)
             return false;
          break;
       }
-
+      console.log("End of process")
    }
 
    game.register = function(message)
