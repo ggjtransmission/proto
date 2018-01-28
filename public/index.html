@@ -84,7 +84,7 @@
       //Adds a user to the game.
       function register() {
          console.log("Call register function")
-         $("player_code").text($("#player_name"));
+         $("#player_code").text($("#player_name").val());
          var messageObject = {
             type: "register",
             name: $("#player_name").val()
