@@ -28,6 +28,7 @@
 
       function processMessage(data)
       {
+         console.log("message data: " + data)
          switch(data.type)
          {
             case "time":
@@ -42,9 +43,19 @@
 
       //Adds a user to the game.
       function register() {
+         console.log("Call register function")
          var messageObject = {
             type: "register",
             name: $("#player_name").val()
+         }
+         s.send(JSON.stringify(messageObject));
+      }
+
+      //When going back to home page, resets game status.
+      function goHome() {
+         console.log("return to home from join")
+         var messageObject = {
+            type: "returnHome",
          }
          s.send(JSON.stringify(messageObject));
       }
@@ -59,21 +70,29 @@
       function updateTime(time){
          var min = Math.floor(time / 60);
          var sec = time - min * 60;
-         var fsec = "" + sec
-         if (fsec.length < 2) {fsec = "0" + sec;}
-         var prettyTime = min + ":" + fsec;
+         var prettyTime = min + ":" + sec;
          $("#timeRemaining").html(prettyTime);
       }
 
       $(document).ready(function(){
-         $(register_button).click(function()
-         {
-            register();
-         })
+         // $(register_button).click(function()
+         // {
+         //    register();
+         // })
 
-         $(start_game).click(function(){
-            sendStart();
-         })
+         // $(start_game).click(function(){
+         //    sendStart();
+         // })
+
+         $("#join_button").click(function(){
+            console.log("Clicked join button registering the user")
+            switchPage("lobby_page");
+            register();
+         });
+
+         $("#create-game_button").click(function(){
+            switchPage("join_page");
+         });
 
          $("#instructions_button").click(function(){
             console.log("show instructions");
@@ -81,91 +100,86 @@
 
          $("#credits_button").click(function(){
             console.log("show credits");
+            goHome();
+            switchPage("start_page");
          });
 
       })
 
       function switchPage(pageId)
       {
+         console.log("page Id  = " + pageId)
          $(".page").hide();
          $("#"+pageId).show();
       }
 
    </script>
-
-
+   
 </head>
 <body>
 
 <header class="w3-container w3-flat-midnight-blue">
    <center>
-  <h1><i>Plague Party!</i></h1>
-</center>
+      <h1><i>Plague Party!</i></h1>
+   </center>
 </header>
 
+<!-- Home page -->
 <div class="w3-cell-row">
   <div class="w3-cell">
   </div>
   <div class="w3-cell w3-container">
    <div class="page" id="start_page" >
+      <center>
+         <p>"Funny Quote"</p>
+         <img src="PlagueParty2.png" alt="" width="363" height="388.5">
+         <button id="create-game_button">Create Game</button>
+      </center>
+   </div>   
+  </div>
+</div>
+
+<!-- Join page -->
+<div class="w3-cell-row">
+  <div class="w3-cell">
+  </div>
+  <div class="w3-cell w3-container">
+   <div hidden class="page" id="join_page" >
 
       <p>Enter Your name: <input id="player_name" type="text" name="name"/></p>
-      <button id="register_button">Join Game</button>
-
-      <button id="start_game">Start Game</button>
+      <center>
+         <button id="join_button">Join Game</button>
+      </center>
    </div>
-   <div class="page" id="game_page" >
-      <div id="timeRemaining"></div>
-      <p>Time remaining to find a cure</p>
+  </div>
+</div>
 
-      <div id="known_info">
-         <table>
-            <tr>
-               <td>
-                  Symptoms
-               </td>
-               <td id="symp_1">
-                  A
-               </td>
-               <td id="symp_2">
-                  B
-               </td>
-               <td id="symp_3">
-                  C
-               </td>
-               <td id="symp_4">
-                  D
-               </td>
-               <td id="symp_5">
-                  E
-               </td>
-            </tr>
-            <tr>
-               <td >
-                  Mutagens
-               </td>
-               <td id="mut_1">
-                  1
-               </td>
-               <td id="mut_2">
-                  2
-               </td>
-               <td id="mut_3">
-                  3
-               </td>    
-               <td id="mut_4">
-                  4
-               </td>                          
-               <td id="mut_5">
-                  5
-               </td>               
-            </tr>
-         </table>
-      </div>
-      <div >
+<!-- Lobby page -->
+<div class="w3-cell-row">
+  <div class="w3-cell">
+  </div>
+  <div class="w3-cell w3-container">
+   <div hidden  class="page" id="lobby_page" >
+      <center>
+      <p>A breakout has occured ...</p>
+      <p>Waiting for game to start</p>
+      <p>A breakout has occured ...</p>
+      </center>
+   </div>
+  </div>
+</div>
 
-      </div>
-
+<!-- Game in progress page -->
+<div class="w3-cell-row">
+  <div class="w3-cell">
+  </div>
+  <div class="w3-cell w3-container">
+   <div hidden class="page" id="game_in_progress_page" >
+      <center>
+      <p>Game</p>
+      <p>in</p>
+      <p>progress</p>
+      </center>
    </div>
   </div>
 </div>

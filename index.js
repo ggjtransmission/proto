@@ -6,22 +6,6 @@ var webport = 3000;
 
 var app = express();
 
-var landPage = "home.html";
-
-app.get('/', function(req,res){
-  console.log("game.exists")
-  console.log(game.exists)
-  if(game.exists){
-    if(game.running){
-      landPage = "gameInProgress.html";
-    }else{
-      landPage = "join.html";
-    }
-  }else{    
-    landPage = "home.html";
-  }
-  res.redirect(landPage);
-})
 app.use(express.static('public'));
 var server = require('http').createServer(app);
 

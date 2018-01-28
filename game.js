@@ -25,6 +25,11 @@ module.exports = function (socketServer)
             game.running = true;
             socketServer.broadcast(JSON.stringify({"type":"time","message":game.time}))
          break;
+         case "returnHome":
+            game.exists = false;
+            game.running = false;
+            socketServer.broadcast(JSON.stringify({"type":"time","message":game.time}))
+         break;
          default:
             console.log("here instead");
             return false;
