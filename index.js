@@ -55,7 +55,12 @@ wsServer.on('close',function(ws,req){
 })
 
 wsServer.on('error', function(err) {
-  console.log("ewps");
+  console.log("websocket error");
+  console.log(err.stack);
+})
+
+process.on('uncaughtException', function(err) {
+  console.log("uncaught exception");
   console.log(err.stack);
 })
 
