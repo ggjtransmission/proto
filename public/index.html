@@ -176,6 +176,11 @@
                   $("#pair-item" + i).text(knownPairs[i]);            
                }
             break;
+            case "cureSuccessful":
+               console.log("Game won");
+               //For now go back to start screen
+                  switchPage("start_page");
+            break;
             case "time":
             // console.log("update time");
                updateTime(data.message);
@@ -237,6 +242,18 @@
          s.send(JSON.stringify(messageObject));
       }
 
+      //Check server to see if user has correct
+      //cure guess. 
+      function attemptCure() {
+         var messageObject = {
+            type: "attemptCure",
+            humArray: humoursArray,
+            symArray: symptomsArray,
+            id: userId
+         }
+         s.send(JSON.stringify(messageObject));
+      }
+
       //Runs examine function to update models.
       function sendNewPair(newMatchedPair) {
          console.log("send new pair function")
@@ -246,6 +263,16 @@
             id: userId
          }
          s.send(JSON.stringify(messageObject));
+      }
+
+      function updateArrayValues(area, num){
+         //This updates the humours and symptoms
+         if(area === "humour"){
+            humoursArray[num] = document.getElementById("humour-item" + num).value;              
+         }
+         if(area === "symptom"){  
+            symptomsArray[num] = document.getElementById("symptom-item" + num).value;          
+         }        
       }
 
       //***********************
@@ -270,6 +297,10 @@
 
          $("#examine_button").click(function(){ 
             examine();
+         });
+
+         $("#attempt-cure_button").click(function(){ 
+            attemptCure();
          });
 
          $("#instructions_button").click(function(){
@@ -430,24 +461,24 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
          <p>Humours Known: </p>
          <div class="humours-container">
             <div class="humour-item">
-         <input id="humour-item0" type="text" value="#" /></div>
+         <input id="humour-item0" type="text" value="#" onchange="updateArrayValues("humour", 0)" /></div>
             <div class="humour-item">
-         <input id="humour-item1" type="text" value="#" /></div>
+         <input id="humour-item1" type="text" value="#" onchange="updateArrayValues("humour", 1)" /></div>
             <div class="humour-item">
-         <input id="humour-item2" type="text" value="#" /></div>
+         <input id="humour-item2" type="text" value="#" onchange="updateArrayValues("humour", 2)" /></div>
             <div class="humour-item">
-         <input id="humour-item3" type="text" value="#" /></div>
+         <input id="humour-item3" type="text" value="#" onchange="updateArrayValues("humour", 3)" /></div>
          </div>
          <p>Symptoms Known: </p>
          <div class="symptoms-container">
             <div class="symptom-item">
-         <input id="symptom-item0" type="text"  value="#" /></div>
+         <input id="symptom-item0" type="text"  value="#" onchange="updateArrayValues("symptom", 0)" /></div>
             <div class="symptom-item">
-         <input id="symptom-item1" type="text"  value="#" /></div>
+         <input id="symptom-item1" type="text"  value="#" onchange="updateArrayValues("symptom", 1)" /></div>
             <div class="symptom-item">
-         <input id="symptom-item2" type="text"  value="#" /></div>
+         <input id="symptom-item2" type="text"  value="#" onchange="updateArrayValues("symptom", 2)" /></div>
             <div class="symptom-item">
-         <input id="symptom-item3" type="text"  value="#" /></div>
+         <input id="symptom-item3" type="text"  value="#" onchange="updateArrayValues("symptom", 3)" /></div>
          </div>
          <p>Known Pairs: </p>
          <div class="pairs-container">
