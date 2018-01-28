@@ -17,6 +17,9 @@
       var screen = {};
       screen.width = $(window).width();
       screen.height = $(window).height();
+      var userId = "";
+      var humorsArray = [null,null,null,null];
+      var symptomsArray = [null,null,null,null];
 
       s.onopen = function(){
          console.log("Opened Socket");
@@ -33,6 +36,10 @@
          processMessage(data);
       }
 
+      //***********************
+      //This process catches the broadcasts
+      //from the server and then deals with them
+      //***********************
       function processMessage(data)
       {
          console.log("message data: " + data)
@@ -69,10 +76,32 @@
                //Updates the counter of registered players
                $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
                $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
-               if(data.numberOfRegisteredPlayers === data.maxNumberOfPlayers){
+               //When necesary amount of players is reached
+               //we start the game
+               if(data.numberOfRegisteredPlayers === data.maxNumberOfPlayers){                  
                   $("#header").hide();
                   switchPage("disease_page");
                } 
+            break;
+            case "examine":
+               //We have examined a new person, and
+               //our arrays have been updated with
+               //new data. So we set them to the new
+               //data arrays sent back.
+               //(Note: catches all transmisions of
+               //examine, so we want to be able to 
+               //only update our arrays if the transmission
+               //is meant for us)
+               console.log(data.userHumoursArray)
+               console.log(data.userSymptomsArray)
+               if(data.userId === userId){
+                  humorsArray = data.userHumoursArray;
+                  symptomsArray = data.userSymptomsArray;
+               }
+               for(var i = 0; i < data.userHumoursArray.count; i++){
+                  $("#humor_item" + i).text(data.userHumoursArray[i]);  
+                  $("#symptom_item" + i).text(data.userSymptomsArray[i]);                  
+               }
             break;
             case "time":
             // console.log("update time");
@@ -81,10 +110,16 @@
          }
       }
 
+      //***********************
+      //These funtions send calls to run 
+      //functions on the server
+      //***********************
+
       //Adds a user to the game.
       function register() {
          console.log("Call register function")
          $("player_code").text($("#player_name"));
+         userId = $("#player_name").val();
          var messageObject = {
             type: "register",
             name: $("#player_name").val()
@@ -115,15 +150,31 @@
          $("#timeRemaining").html(prettyTime);
       }
 
-      $(document).ready(function(){
-         // $(register_button).click(function()
-         // {
-         //    register();
-         // })
+      //Runs examine function to update models.
+      function examine() {
+         console.log("Call examine function")
+         var messageObject = {
+            type: "examine",
+            humArray: humorsArray,
+            symArray: symptomsArray,
+            id: userId
+         }
+         s.send(JSON.stringify(messageObject));
+      }
 
-         // $(start_game).click(function(){
-         //    sendStart();
-         // })
+      //***********************
+      //Here we take button presses and make calls
+      //to functions that will call functions on
+      //the servier
+      //***********************
+      $(document).ready(function(){
+
+         $("#create-game_button").click(function(){
+            var messageObject = {
+               type: "create",
+            }
+            s.send(JSON.stringify(messageObject));
+         });
 
          $("#join_button").click(function(){
             console.log("Clicked join button registering the user")
@@ -131,11 +182,8 @@
             register();
          });
 
-         $("#create-game_button").click(function(){
-            var messageObject = {
-               type: "create",
-            }
-            s.send(JSON.stringify(messageObject));
+         $("#examine_button").click(function(){ 
+            examine();
          });
 
          $("#instructions_button").click(function(){
@@ -293,17 +341,17 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
          <p id=timeRemaining></p>
          <p>Left to find a Cure</p>
          <p>Here is what we know</p>
-         <div class="symptoms-container">
-            <div class="symptom-item">1</div>
-            <div class="symptom-item">2</div>
-            <div class="symptom-item">3</div>
-            <div class="symptom-item">4</div>
-         </div>
          <div class="humours-container">
-            <div class="humour-item">A</div>
-            <div class="humour-item">B</div>
-            <div class="humour-item">C</div>
-            <div class="humour-item">D</div>
+            <div class="humour-item"><p id:humor-item0></p></div>
+            <div class="humour-item"><p id:humor-item1></p></div>
+            <div class="humour-item"><p id:humor-item2></p></div>
+            <div class="humour-item"><p id:humor-item3></p></div>
+         </div>
+         <div class="symptoms-container">
+            <div class="symptom-item"><p id:symptom-item0></p></div>
+            <div class="symptom-item"><p id:symptom-item1></p></div>
+            <div class="symptom-item"><p id:symptom-item2></p></div>
+            <div class="symptom-item"><p id:symptom-item3></p></div>
          </div>
          <div class="pairs-container">
             <div class="pair-item">A3</div>
