@@ -9,7 +9,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
    <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
-   <script type="text/javascript">
+<!--    <script type="text/javascript">
       s = new WebSocket("ws://"+location.hostname+":" + location.port);
 
       s.onopen = function(){
@@ -89,7 +89,7 @@
          $("#"+pageId).show();
       }
 
-   </script>
+   </script> -->
 
 
 </head>
@@ -125,6 +125,7 @@
   <button id="credits_button">Credits</button>
          <script type="text/javascript">
             document.getElementById("credits_button").onclick = function () {
+               game.exists = false;
                location.href = "home.html";
             }
          </script>
