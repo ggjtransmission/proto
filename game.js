@@ -74,10 +74,26 @@ module.exports = function (socketServer)
 
    game.createCode = function(){
       var humours = [1,2,3,4]
-      var symptom = ["A","B","C","D"]
-      for(var i = 0; i < game.maxNumberOfPlayers; i++){
-         game.humoursCodeArray[i] = humours[Math.floor(Math.random() * (game.maxNumberOfPlayers - i))];
-         game.symptomsCodeArray[i] = symptom[Math.floor(Math.random() * (game.maxNumberOfPlayers - i))];
+      var symptoms = ["A","B","C","D"]
+      for(var i = 0; i < game.numberOfsymptoms; i++){
+         //Find random position 
+         //(Note: we use the length of the avalible options for the
+         //random number as we could have 40 options we can chose from
+         //, but we only want a subset of the avalible options)
+         var tempRand = Math.floor(Math.random() * (humours.length));
+         //Add random humour to ith item in the solution array
+         game.humoursCodeArray[i] = humours[tempRand];
+         //Remove the humour from avalible humours list
+         humours.splice(tempRand, 1);
+         tempRand = Math.floor(Math.random() * (symptoms.length));
+         game.symptomsCodeArray[i] = symptoms[tempRand];
+         symptoms.splice(tempRand, 1);
+      }
+      for(var j = 0; j < game.numberOfsymptoms; j++){
+         console.log("position " + j + " " + game.humoursCodeArray[j]);
+      }
+      for(var k = 0; k < game.numberOfsymptoms; k++){
+         console.log("position " + k + " " + game.symptomsCodeArray[k]);
       }
    }
 
@@ -95,7 +111,7 @@ module.exports = function (socketServer)
             if(!humArrayFull){
                //Make array of open positions
                for(var k = 0; k < game.numberOfsymptoms; k++){
-                  if(userHumoursArray[k] === null){
+                  if(userHumoursArray[k] === "#"){
                      tempOpenPosArray[openPos] = k;
                      openPos++;
                   }
@@ -106,6 +122,7 @@ module.exports = function (socketServer)
                   //Use random open position to get value from the solution array
                   //and add that value into the postion on the userArray that
                   //we will then transmit back to the user
+                  console.log("Setting h openPos: " + tempPosChosen + " to: " + game.humoursCodeArray[tempPosChosen])
                   userHumoursArray[tempPosChosen] = game.humoursCodeArray[tempPosChosen];
                   //reset temp vars in case we iterate on the for loop again
                   openPos = 0;
@@ -114,22 +131,27 @@ module.exports = function (socketServer)
                }else{
                   humArrayFull = true;
                }
+            }else{
+               i = i-1;
             }
          }else{
             if(!symArrayFull){
                //Make array of open positions
                for(var k = 0; k < game.numberOfsymptoms; k++){
-                  if(userSymptomsArray[k] === null){
+                  if(userSymptomsArray[k] === "#"){
                      tempOpenPosArray[openPos] = k;
                      openPos++;
                   }
                }
                if(openPos != 0){
                   //random pick of open position
+                  console.log("tempOpenPosArray.length = " + tempOpenPosArray.length)
                   tempPosChosen = tempOpenPosArray[Math.floor(Math.random() * tempOpenPosArray.length)]
                   //Use random open position to get value from the solution array
                   //and add that value into the postion on the userArray that
                   //we will then transmit back to the user
+                  //YOU ARE DOING SOMETHING WRONG WITH ITERATOR IDS
+                  console.log("Setting s openPos: " + tempPosChosen + " to: " + game.symptomsCodeArray[tempPosChosen])
                   userSymptomsArray[tempPosChosen] = game.symptomsCodeArray[tempPosChosen];
                   //reset temp vars in case we iterate on the for loop again
                   openPos = 0;
@@ -138,6 +160,8 @@ module.exports = function (socketServer)
                }else{
                   symArrayFull = true;
                }
+            }else{
+               i = i-1;
             }
          }
       }

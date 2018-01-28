@@ -18,8 +18,8 @@
       screen.width = $(window).width();
       screen.height = $(window).height();
       var userId = "";
-      var humorsArray = [null,null,null,null];
-      var symptomsArray = [null,null,null,null];
+      var humoursArray = ["#","#","#","#"];
+      var symptomsArray = ["#","#","#","#"];
 
       s.onopen = function(){
          console.log("Opened Socket");
@@ -32,7 +32,7 @@
       s.onmessage = function(m)
       {
          var data = JSON.parse(m.data);
-         console.log(m.data)
+         // console.log(m.data)
          processMessage(data);
       }
 
@@ -42,7 +42,7 @@
       //***********************
       function processMessage(data)
       {
-         console.log("message data: " + data)
+         // console.log("message data: " + data)
          switch(data.type)
          {
             case "reset":
@@ -92,15 +92,16 @@
                //examine, so we want to be able to 
                //only update our arrays if the transmission
                //is meant for us)
-               console.log(data.userHumoursArray)
-               console.log(data.userSymptomsArray)
                if(data.userId === userId){
-                  humorsArray = data.userHumoursArray;
+                  // console.log("updating the user's arrays")
+                  humoursArray = data.userHumoursArray;
                   symptomsArray = data.userSymptomsArray;
                }
-               for(var i = 0; i < data.userHumoursArray.count; i++){
-                  $("#humor_item" + i).text(data.userHumoursArray[i]);  
-                  $("#symptom_item" + i).text(data.userSymptomsArray[i]);                  
+               //This updates the humours and symptoms
+               for(var i = 0; i < humoursArray.length; i++){
+                  // console.log("updating array pos: " + i)
+                  $("#humour-item" + i).text(humoursArray[i]);  
+                  $("#symptom-item" + i).text(symptomsArray[i]);          
                }
             break;
             case "time":
@@ -155,7 +156,7 @@
          console.log("Call examine function")
          var messageObject = {
             type: "examine",
-            humArray: humorsArray,
+            humArray: humoursArray,
             symArray: symptomsArray,
             id: userId
          }
@@ -342,16 +343,16 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
          <p>Left to find a Cure</p>
          <p>Here is what we know</p>
          <div class="humours-container">
-            <div class="humour-item"><p id:humor-item0></p></div>
-            <div class="humour-item"><p id:humor-item1></p></div>
-            <div class="humour-item"><p id:humor-item2></p></div>
-            <div class="humour-item"><p id:humor-item3></p></div>
+            <div class="humour-item"><p id="humour-item0">ugh</p></div>
+            <div class="humour-item"><p id="humour-item1">mine</p></div>
+            <div class="humour-item"><p id="humour-item2">stuff</p></div>
+            <div class="humour-item"><p id="humour-item3"></p></div>
          </div>
          <div class="symptoms-container">
-            <div class="symptom-item"><p id:symptom-item0></p></div>
-            <div class="symptom-item"><p id:symptom-item1></p></div>
-            <div class="symptom-item"><p id:symptom-item2></p></div>
-            <div class="symptom-item"><p id:symptom-item3></p></div>
+            <div class="symptom-item"><p id="symptom-item0">sym 1</p></div>
+            <div class="symptom-item"><p id="symptom-item1">sym 2</p></div>
+            <div class="symptom-item"><p id="symptom-item2"></p></div>
+            <div class="symptom-item"><p id="symptom-item3"></p></div>
          </div>
          <div class="pairs-container">
             <div class="pair-item">A3</div>
