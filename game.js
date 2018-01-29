@@ -73,6 +73,7 @@ module.exports = function (socketServer)
             game.time = ALLOWED_TIME;
             game.numberOfRegisteredPlayers = 0;
             game.players = [];
+            game.knownPairArray = [];
             socketServer.broadcast(JSON.stringify({"type":"reset"}));
          break;
          default:
