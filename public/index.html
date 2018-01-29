@@ -6,6 +6,7 @@
    </title>
    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
+   <link rel="stylesheet" href="main.css">
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
    <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
@@ -369,7 +370,7 @@ var heartbeat = new Audio("medical_heart_rate_monitor_001.mp3");
 
 </head>
 <body>
-
+<!--
 <header class="w3-container w3-flat-midnight-blue">
    <label class="container">sound
      <input id="soundtoggle" type="checkbox" onclick="togglemusic()"/>
@@ -382,185 +383,139 @@ var heartbeat = new Audio("medical_heart_rate_monitor_001.mp3");
       <button hidden id="close_button" >X</button>
    </right>
 </header>
+-->
 
 <!-- Home page -->
-<div class="w3-cell-row">
-  <div class="w3-cell">
-  </div>
-  <div class="w3-cell w3-container">
-   <div hidden class="page" id="start_page" >
-      <center>
-         <p>The game of socially transmitted diseases.</p>
-         <img src="PlagueParty2.png" alt="" width="363" height="388.5">
-         <button id="create-game_button" onclick="squish.play()">Create Game</button>
-         <!--<button id="squishsound" onclick="squish.play()">SQUISH</button>-->
-      </center>
-   </div>   
-  </div>
+<div hidden class="page" id="start_page" >
+   <p>The game of socially transmitted diseases.</p>
+   <img src="PlagueParty2.png" alt="" width="363" height="388.5">
+   <button id="create-game_button" onclick="squish.play()">Create Game</button>
+   <!--<button id="squishsound" onclick="squish.play()">SQUISH</button>-->
 </div>
 
 <!-- Join page -->
-<div class="w3-cell-row">
-  <div class="w3-cell">
-  </div>
-  <div class="w3-cell w3-container">
-   <div hidden class="page" id="join_page" >
-      <center>
-         <p id="duplicate_msg"></p>
-         <p>Enter Your name:</p>
-         <input id="player_name" type="text" name="name"/>
-         <p id="player_count"> 0 / 4 </p>
-         <p>Players Joined</p>
-         <button id="join_button" onclick="squish.play()">Join Game</button>
-      </center>
+<div hidden class="page" id="join_page" >
+   <h1>Join Game</h1>
+   <p id="duplicate_msg"></p>
+   <p>Enter Your name:</p>
+   <input id="player_name" type="text" name="name"/>
+   <div>
+      <p id="player_count"> 0 / 4 </p>
+      <p>Players Joined</p>
    </div>
-  </div>
+   <button id="join_button" onclick="squish.play()">Join Game</button>
 </div>
 
 <!-- Lobby page -->
-<div class="w3-cell-row">
-  <div class="w3-cell">
-  </div>
-  <div class="w3-cell w3-container">
-   <div hidden  class="page" id="lobby_page" >
-      <center>
-         <p>A breakout has occured ...</p>
-         <p>Waiting for game to start</p>
-         <p>A breakout has occured ...</p>
+<div hidden  class="page" id="lobby_page" >
+      <p>A breakout has occured ...</p>
+      <p>Waiting for game to start</p>
+      <p>A breakout has occured ...</p>
+      <div>
          <p id="player_count1"> 0 / 4 </p>
          <p>Players Joined</p>
-      </center>
-   </div>
-  </div>
+      </div>
 </div>
 
 <!-- Game in progress page -->
-<div class="w3-cell-row">
-  <div class="w3-cell">
-  </div>
-  <div class="w3-cell w3-container">
-   <div hidden class="page" id="game_in_progress_page" >
-      <center>
-      <p>Game</p>
-      <p>in</p>
-      <p>progress</p>
-      </center>
-   </div>
-  </div>
+<div hidden class="page" id="game_in_progress_page" >
+   <p>Game</p>
+   <p>in</p>
+   <p>progress</p>
 </div>
 
 <!-- Disease in progress page -->
-<div class="w3-cell-row">
-  <div class="w3-cell">
-  </div>
-  <div class="w3-cell w3-container">
-   <div hidden class="page" id="disease_page" >
-      <center>
-         <p>There's been an outbreak!</p>
-         <p id=timeRemaining></p>
-         <p>Left to find a Cure.<br>Here is what we know...</p>
-         <p>Humours Known: </p>
-         <div class="humours-container">
-            <div class="humour-item">
-         <input id="humour-item0" type="text" value="#" onchange="updateArrayValues("humour", 0)" /></div>
-            <div class="humour-item">
-         <input id="humour-item1" type="text" value="#" onchange="updateArrayValues("humour", 1)" /></div>
-            <div class="humour-item">
-         <input id="humour-item2" type="text" value="#" onchange="updateArrayValues("humour", 2)" /></div>
-            <div class="humour-item">
-         <input id="humour-item3" type="text" value="#" onchange="updateArrayValues("humour", 3)" /></div>
-         </div>
-         <p>Symptoms Known: </p>
-         <div class="symptoms-container">
-            <div class="symptom-item">
-         <input id="symptom-item0" type="text"  value="#" onchange="updateArrayValues("symptom", 0)" /></div>
-            <div class="symptom-item">
-         <input id="symptom-item1" type="text"  value="#" onchange="updateArrayValues("symptom", 1)" /></div>
-            <div class="symptom-item">
-         <input id="symptom-item2" type="text"  value="#" onchange="updateArrayValues("symptom", 2)" /></div>
-            <div class="symptom-item">
-         <input id="symptom-item3" type="text"  value="#" onchange="updateArrayValues("symptom", 3)" /></div>
-         </div>
-         <p>Known Pairs: </p>
-         <div class="pairs-container">
-            <div class="pair-item"><p id="pair-item0">##</p></div>
-            <div class="pair-item"><p id="pair-item1">##</p></div>
-            <div class="pair-item"><p id="pair-item2">##</p></div>
-            <div class="pair-item"><p id="pair-item3">##</p></div>
-         </div>
-            <input id="patient_code" type="text" name="patientCode" placeholder="Patient Name"/>
-            <button id="examine_button" onclick="squish.play()">Examine</button>
-            <button id="attempt-cure_button" onclick="heartbeat.play()">Attempt<br/>Cure</button>
-            
-      </center>
+<div hidden class="page" id="disease_page" >
+   <div class="timeLeft">
+      <h2>Time Left</h2>
+      <h1 id=timeRemaining></h1>
    </div>
-  </div>
+   <h2>Humours Known: </h2>
+      <div class="humours-container">
+         <div class="humour-item">
+      <input id="humour-item0" type="text" value="#" onchange="updateArrayValues("humour", 0)" /></div>
+         <div class="humour-item">
+      <input id="humour-item1" type="text" value="#" onchange="updateArrayValues("humour", 1)" /></div>
+         <div class="humour-item">
+      <input id="humour-item2" type="text" value="#" onchange="updateArrayValues("humour", 2)" /></div>
+         <div class="humour-item">
+      <input id="humour-item3" type="text" value="#" onchange="updateArrayValues("humour", 3)" /></div>
+      </div>
+   <h2>Symptoms Known: </h2>
+      <div class="symptoms-container">
+         <div class="symptom-item">
+      <input id="symptom-item0" type="text"  value="#" onchange="updateArrayValues("symptom", 0)" /></div>
+         <div class="symptom-item">
+      <input id="symptom-item1" type="text"  value="#" onchange="updateArrayValues("symptom", 1)" /></div>
+         <div class="symptom-item">
+      <input id="symptom-item2" type="text"  value="#" onchange="updateArrayValues("symptom", 2)" /></div>
+         <div class="symptom-item">
+      <input id="symptom-item3" type="text"  value="#" onchange="updateArrayValues("symptom", 3)" /></div>
+      </div>
+   <h2>Known Pairs: </h2>
+      <div class="pairs-container">
+         <div class="pair-item"><p id="pair-item0">##</p></div>
+         <div class="pair-item"><p id="pair-item1">##</p></div>
+         <div class="pair-item"><p id="pair-item2">##</p></div>
+         <div class="pair-item"><p id="pair-item3">##</p></div>
+      </div>
+   <div class="interact">
+      <input id="patient_code" type="text" name="patientCode" placeholder="Patient Name"/>
+      <button id="examine_button" onclick="squish.play()">Examine</button>
+      <button id="attempt-cure_button" onclick="heartbeat.play()">Attempt<br/>Cure</button>
+   </div>
 </div>
 
 <!-- Instructions page -->
-<div class="w3-cell-row">
-  <div class="w3-cell">
-  </div>
-  <div class="w3-cell w3-container">
-   <div hidden class="page" id="instructions_page" >
-      <center>
-      <h2>Plague Party is The Game of Socially Transmitted Diseases. </h2>
+<div hidden class="page" id="instructions_page" >
+   <h2>Plague Party is The Game of Socially Transmitted Diseases. </h2>
 
-      <p>Get your mind out of the gutter, it's social...<br>
+   <p>Get your mind out of the gutter, it's social...<br>
 
-      You are all infected with a random disease and have a limited time to find a cure before your time runs out. Unlucky! The winner is the person who finds the cure first by solving the puzzle (finding the cure). But be careful, as examining the other patients and attempting cures can transmit the disease faster.</p>
+   You are all infected with a random disease and have a limited time to find a cure before your time runs out. Unlucky! The winner is the person who finds the cure first by solving the puzzle (finding the cure). But be careful, as examining the other patients and attempting cures can transmit the disease faster.</p>
 
-      <p>Create a game using the create button or join an existing game by pressing join.<br>
+   <p>Create a game using the create button or join an existing game by pressing join.<br>
 
-      Once a game is started you have a limited time to cure the disease. The mortality bar will show you your current mortality rate. When it hits 100 percent, the world is decimated. The only way to save humanity is to interact with the other players so get out of your comfort zone and meet other people...and talk to them.</p>
+   Once a game is started you have a limited time to cure the disease. The mortality bar will show you your current mortality rate. When it hits 100 percent, the world is decimated. The only way to save humanity is to interact with the other players so get out of your comfort zone and meet other people...and talk to them.</p>
 
-      <p>In order to cure the disease you must find the correct sequence and pairs of Humours and Symptoms. Humours are old-timey concepts of medicine. No wonder you're sick! Once you have the correct pairs and sequence you can attempt a cure. But beware, if you're wrong the disease spreads faster.</p>
+   <p>In order to cure the disease you must find the correct sequence and pairs of Humours and Symptoms. Humours are old-timey concepts of medicine. No wonder you're sick! Once you have the correct pairs and sequence you can attempt a cure. But beware, if you're wrong the disease spreads faster.</p>
 
-      <p>To find the clues you need, you'll need to examine the other players for Humours and Symptoms. Find one of the other players and input their player code. Then, press the Examine button. It is customary to introduce yourself and make eye contact! Your shoes are great but you've seen them. Look up.</p> 
+   <p>To find the clues you need, you'll need to examine the other players for Humours and Symptoms. Find one of the other players and input their player code. Then, press the Examine button. It is customary to introduce yourself and make eye contact! Your shoes are great but you've seen them. Look up.</p> 
 
-      <p>You will receive two pieces of information about the pairs and sequence of the cure. They'll automatically be input into your medical chart. Once you have enough information you can attempt a cure. But be careful, a bad cure guess will accelerate the infection!</p>
+   <p>You will receive two pieces of information about the pairs and sequence of the cure. They'll automatically be input into your medical chart. Once you have enough information you can attempt a cure. But be careful, a bad cure guess will accelerate the infection!</p>
 
-      <p>You'll be helped by the automatic collaboration and transmission of any pairs discovered by another player. They'll be immediately transmitted to all players' medical charts, though the correct sequence position will not. You must use what you have discovered along with deductive reasoning, using the common pair information to make an educated guess about the cure pairs and sequence.</p>
+   <p>You'll be helped by the automatic collaboration and transmission of any pairs discovered by another player. They'll be immediately transmitted to all players' medical charts, though the correct sequence position will not. You must use what you have discovered along with deductive reasoning, using the common pair information to make an educated guess about the cure pairs and sequence.</p>
 
-      <P>Remember the clock is ticking from the moment the game starts. Examinations spread the disease and wrong guesses spread the disease so pay attention to the mortality rate. Most importantly remember you have to interact with every player!</P>
+   <P>Remember the clock is ticking from the moment the game starts. Examinations spread the disease and wrong guesses spread the disease so pay attention to the mortality rate. Most importantly remember you have to interact with every player!</P>
 
-      <P>Now get out there and...<br><br>
+   <P>Now get out there and...<br><br>
 
-      Mix, Mingle and Mort?!?</p>
-      </center>
-   </div>
-  </div>
+   Mix, Mingle and Mort?!?</p>
 </div>
 
 <!-- Credits page -->
-<div class="w3-cell-row">
-  <div class="w3-cell">
-  </div>
-  <div class="w3-cell w3-container">
-   <div hidden class="page" id="credits_page" >
-      <p><ul>
-        <li>"Heartbeat" (146765__thenudo__heart-beat) : CC0</li>
+<div hidden class="page" id="credits_page" >
+   <p><ul>
+     <li>"Heartbeat" (146765__thenudo__heart-beat) : CC0</li>
 
-        <li>"Plague" by <a href="http://freemusicarchive.org/music/Devil_Music/" title="CC3 License">Devil Music</a> - (Devil_Music_-37-_Plague) :<a href="https://creativecommons.org/licenses/by-nc-nd/3.0/"> CC3</a></li>
+     <li>"Plague" by <a href="http://freemusicarchive.org/music/Devil_Music/" title="CC3 License">Devil Music</a> - (Devil_Music_-37-_Plague) :<a href="https://creativecommons.org/licenses/by-nc-nd/3.0/"> CC3</a></li>
 
-        <li>"Emergency Warning Signal" (372251__mpaol2023__standard-emergency-warning-signal-sews) : CC0</li>
+     <li>"Emergency Warning Signal" (372251__mpaol2023__standard-emergency-warning-signal-sews) : CC0</li>
 
-        <li>"Papageno Drunk" by <a href="http://freemusicarchive.org/music/Ergo_Phizmiz/" title="CC4 License">Ergo Phizmiz</a> - (Ergo_Phizmiz_-01-_Papageno_Drunk) :<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> CC4</a></li>
+     <li>"Papageno Drunk" by <a href="http://freemusicarchive.org/music/Ergo_Phizmiz/" title="CC4 License">Ergo Phizmiz</a> - (Ergo_Phizmiz_-01-_Papageno_Drunk) :<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> CC4</a></li>
 
-        <li>"A Little bit of Dreammusik" by <a href="http://freemusicarchive.org/music/Ergo_Phizmiz/" title="CC4 License">Ergo Phizmiz</a> - (Ergo_Phizmiz_-02-_A_Little_Bit_of_Dreammusik) :<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> CC4</a></li>
+     <li>"A Little bit of Dreammusik" by <a href="http://freemusicarchive.org/music/Ergo_Phizmiz/" title="CC4 License">Ergo Phizmiz</a> - (Ergo_Phizmiz_-02-_A_Little_Bit_of_Dreammusik) :<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> CC4</a></li>
 
-        <li>Squish from Zapsplat (zapsplat_cartoon_squish_squelch_wet_001_14500) :<a href="https://www.zapsplat.com/license-type/standard-license/"> License</a></li>
+     <li>Squish from Zapsplat (zapsplat_cartoon_squish_squelch_wet_001_14500) :<a href="https://www.zapsplat.com/license-type/standard-license/"> License</a></li>
 
-        <li>Heart Rate Monitor from Zapsplat (medical_heart_rate_monitor_001.mp3) :<a href="https://www.zapsplat.com/license-type/standard-license/"> License</a></li>
-</ul></p>
-   </div>
-  </div>
+     <li>Heart Rate Monitor from Zapsplat (medical_heart_rate_monitor_001.mp3) :<a href="https://www.zapsplat.com/license-type/standard-license/"> License</a></li>
+   </ul></p>
 </div>
 
 <footer id=footer class="w3-container w3-flat-midnight-blue">
-  <button id="instructions_button" title="Instructions">i</button>
+  <button id="instructions_button" data-tooltip="Instructions">i</button>
   <label id="player_code"></label>
-  <button id="credits_button" title="Credits">c</button>
+  <button id="credits_button" data-tooltip="Credits">c</button>
 </footer>
 
 <footer hidden id=subpageFooter class="w3-container w3-flat-midnight-blue">

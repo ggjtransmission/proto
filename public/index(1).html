@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>
+      Plague Party!
+   </title>
+   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+   <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
+	<link rel="stylesheet" href="main.css">
+	
+	
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+   <script type="text/javascript">
+      s = new WebSocket("ws://"+location.hostname+":" + location.port);
+
+      var curPage = "start_page";
+      var prevPage = "start_page";
+      var screen = {};
+      screen.width = $(window).width();
+      screen.height = $(window).height();
+      var userId = "";
+      var humoursArray = ["#","#","#","#"];
+      var symptomsArray = ["#","#","#","#"];
+
+      s.onopen = function(){
+         console.log("Opened Socket");
+      }
+
+      s.onclosed = function(){
+         console.log("Closed Socket");
+      }
+
+      s.onmessage = function(m)
+      {
+         var data = JSON.parse(m.data);
+         // console.log(m.data)
+         processMessage(data);
+      }
+
+      //***********************
+      //This process catches the broadcasts
+      //from the server and then deals with them
+      //***********************
+      function processMessage(data)
+      {
+         // console.log("message data: " + data)
+         switch(data.type)
+         {
+            case "reset":
+               document.location = "/";
+            break;
+            case "newconnection":
+               console.log("new connection %o", data);
+               if (data.game_exists) {
+                  if (data.game_running) {
+                     switchPage("game_in_progress_page");
+                  }
+                  else {
+                     switchPage("join_page");
+                  }
+               }
+               else {
+                  switchPage("start_page");
+               }
+            break;
+            case "gamecreated":
+               // someone has created a new game
+               switchPage("join_page");
+            break;
+            case "register":
+               //Updates the counter of registered players
+               $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
+               $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);            
+               console.log("data.message " + data.numberOfRegisteredPlayers)
+            break;
+            case "duplicate_name":
+               // duplicate name chosen, try again
+               $("#player_code").text("");
+               $("#duplicate_msg").text("Name is in use, choose another.");
+               switchPage("join_page");
+            break;
+            case "start":
+               //Updates the counter of registered players
+               $("#player_count").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
+               $("#player_count1").text(data.numberOfRegisteredPlayers + " / " + data.maxNumberOfPlayers);  
+               //When necesary amount of players is reached
+               //we start the game
+               if(data.numberOfRegisteredPlayers === data.maxNumberOfPlayers){                  
+                  $("#header").hide();
+                  switchPage("disease_page");
+               } 
+            break;
+            case "examine":
+               //We have examined a new person, and
+               //our arrays have been updated with
+               //new data. So we set them to the new
+               //data arrays sent back.
+               //(Note: catches all transmisions of
+               //examine, so we want to be able to 
+               //only update our arrays if the transmission
+               //is meant for us)
+               if(data.userId === userId){
+                  // console.log("updating the user's arrays")
+                  humoursArray = data.userHumoursArray;
+                  symptomsArray = data.userSymptomsArray;
+               }
+               //This updates the humours and symptoms
+               for(var i = 0; i < humoursArray.length; i++){
+                  // console.log("updating array pos: " + i)
+                  $("#humour-item" + i).text(humoursArray[i]);  
+                  $("#symptom-item" + i).text(symptomsArray[i]);          
+               }
+            break;
+            case "time":
+            // console.log("update time");
+               updateTime(data.message);
+            break;
+         }
+      }
+
+      //***********************
+      //These funtions send calls to run 
+      //functions on the server
+      //***********************
+
+      //Adds a user to the game.
+      function register() {
+         console.log("Call register function")
+         $("#player_code").text($("#player_name").val());
+         userId = $("#player_name").val();
+         var messageObject = {
+            type: "register",
+            name: $("#player_name").val()
+         }
+         s.send(JSON.stringify(messageObject));
+      }
+
+      //When going back to home page, resets game status.
+      function goHome() {
+         console.log("return to home from join")
+         var messageObject = {
+            type: "killGame",
+         }
+         s.send(JSON.stringify(messageObject));
+      }
+
+      function sendStart(){
+            var messageObject = {
+            type: "start",
+         }
+         s.send(JSON.stringify(messageObject));
+      }
+
+      function updateTime(time){
+         var min = Math.floor(time / 60);
+         var sec = time - min * 60;
+         var prettyTime = min + ":" + sec;
+         $("#timeRemaining").html(prettyTime);
+      }
+
+      //Runs examine function to update models.
+      function examine() {
+         console.log("Call examine function")
+         var messageObject = {
+            type: "examine",
+            humArray: humoursArray,
+            symArray: symptomsArray,
+            id: userId
+         }
+         s.send(JSON.stringify(messageObject));
+      }
+
+      //***********************
+      //Here we take button presses and make calls
+      //to functions that will call functions on
+      //the server
+      //***********************
+      $(document).ready(function(){
+
+         $("#create-game_button").click(function(){
+            var messageObject = {
+               type: "create",
+            }
+            s.send(JSON.stringify(messageObject));
+         });
+
+         $("#join_button").click(function(){
+            console.log("Clicked join button registering the user")
+            switchPage("lobby_page");
+            register();
+         });
+
+         $("#examine_button").click(function(){ 
+            examine();
+         });
+
+         $("#instructions_button").click(function(){
+            console.log("show instructions");
+            $("#footer").hide();
+            $("#close_button").show();
+            $("#headerText").text("Instructions");   
+            prevPage =  curPage;
+            switchPage("instructions_page");
+         });
+
+         $("#credits_button").click(function(){
+            console.log("show credits");
+            $("#footer").hide();
+            $("#subpageFooter").show();
+            $("#close_button").show();
+            $("#headerText").text("Credits"); 
+            prevPage =  curPage;
+            switchPage("credits_page");
+         });
+
+         $("#kill_button").click(function(){
+            console.log("show credits");
+            $("#footer").show();
+            $("#subpageFooter").hide();
+            $("#close_button").hide();
+            $("#headerText").text("Plague Party");
+            goHome();
+            switchPage("start_page");
+         });
+
+         $("#close_button").click(function(){
+            $("#footer").show();
+            $("#subpageFooter").hide();
+            $("#close_button").hide();
+            $("#headerText").text("Plague Party");
+            switchPage(prevPage);
+         });
+
+      })
+
+      function switchPage(pageId)
+      {
+         prevPage =  curPage;
+         curPage = pageId;
+         console.log("page Id  = " + pageId)
+         $(".page").hide();
+         $("#"+pageId).show();
+      }
+
+   </script>
+
+   <script type="text/javascript">
+function togglemusic() {
+  if (document.getElementById("soundtoggle").checked == true) {
+    document.getElementById("backgroundmusic").play();
+  }
+  else {
+    document.getElementById("backgroundmusic").pause();
+  }
+}
+
+var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
+   </script>
+
+</head>
+<body>
+
+<!--
+<header class="w3-container">
+   <label class="container">sound
+     <input id="soundtoggle" type="checkbox" onclick="togglemusic()"/>
+   </label>
+   <audio id="backgroundmusic" src="Devil_Music_-_37_-_Plague.mp3" preload="auto" hidden controls></audio>
+   <center>
+      <h1 id=headerText>Plague Party!</h1>
+   </center>
+   <right>      
+      <button hidden id="close_button" >X</button>
+   </right>
+</header>
+-->
+
+<!-- Home page -->
+<div hidden class="page" id="start_page" >
+	<div class="logo"></div>
+	<h1>Plague Party</h1>
+	<p>The game of socially transmitted diseases.</p>
+	<button id="create-game_button">Create Game</button>
+</div>   
+
+<!-- Join page -->
+<div hidden class="page" id="join_page" >
+	<h1>Join Game</h1>
+	<p id="duplicate_msg"></p>
+	<p>Enter Your name:</p>
+	<input id="player_name" type="text" name="name"/>
+	<div>
+		<span id="player_count"> 0 / 4 </span>
+		<span>Players Joined</span>
+	</div>
+	<button id="join_button">Join Game</button>
+</div>
+
+<!-- Lobby page -->
+<div hidden  class="page" id="lobby_page" >
+	<p>A breakout has occured ...</p>
+	<p>Waiting for game to start</p>
+	<p>A breakout has occured ...</p>
+	<div>
+		<span id="player_count"> 0 / 4 </span>
+		<span>Players Joined</span>
+	</div>
+</div>
+
+<!-- Game in progress page -->
+<div hidden class="page" id="game_in_progress_page">
+	<p>Game</p>
+	<p>in</p>
+	<p>progress</p>
+</div>
+
+<!-- Disease in progress page -->
+<div hidden class="page" id="disease_page" >
+	<div class="timeLeft">
+		<h2>Time Remaining</h2>
+		<h1 id=timeRemaining>00:00</h1>
+	</div>
+    <h2>Humours Known: </h2>
+         <div class="humours-container">
+            <div class="humour-item"><p id="humour-item0">Long Humour Name</p></div>
+            <div class="humour-item"><p id="humour-item1">Long Humour Name</p></div>
+            <div class="humour-item"><p id="humour-item2">Long Humour Name</p></div>
+            <div class="humour-item"><p id="humour-item3">Long Humour Name</p></div>
+         </div>
+         <h2>Symptoms Known: </h2>
+         <div class="symptoms-container">
+            <div class="symptom-item"><p id="symptom-item0">Symptom Name</p></div>
+            <div class="symptom-item"><p id="symptom-item1">Symptom Name</p></div>
+            <div class="symptom-item"><p id="symptom-item2">Symptom Name</p></div>
+            <div class="symptom-item"><p id="symptom-item3">Symptom Name</p></div>
+         </div>
+         <h2>Known Pairs: </h2>
+         <div class="pairs-container">
+            <div class="pair-item">A3</div>
+            <div class="pair-item">B1</div>
+            <div class="pair-item">D2</div>
+            <div class="pair-item"></div>
+            <div class="pair-item"></div>
+            <div class="pair-item"></div>
+            <div class="pair-item"></div>
+            <div class="pair-item"></div>
+         </div>
+	<div class="interact">
+		<input id="patient_code" type="text" name="patientCode" placeholder="Patient Name"/>
+		<button id="attempt-cure_button">Attempt Cure</button>
+		<button id="examine_button">Examine</button>
+	</div>
+</div>
+
+<!-- Instructions page -->
+<div hidden class="page" id="instructions_page" >
+      <p>Plague Party is The Game of Socially Transmitted Diseases. </p>
+
+      <p>Get your mind out of the gutter, it's social...<br>
+
+      You are all infected with a random disease and have a limited time to find a cure before your time runs out. Unlucky! The winner is the person who finds the cure first by solving the puzzle (finding the cure). But be careful, as examining the other patients and attempting cures can transmit the disease faster.</p>
+
+      <p>Create a game using the create button or join an existing game by pressing join.<br>
+
+      Once a game is started you have a limited time to cure the disease. The mortality bar will show you your current mortality rate. When it hits 100 percent, the world is decimated. The only way to save humanity is to interact with the other players so get out of your comfort zone and meet other people...and talk to them.</p>
+
+      <p>In order to cure the disease you must find the correct sequence and pairs of Humours and Symptoms. Humours are old-timey concepts of medicine. No wonder you're sick! Once you have the correct pairs and sequence you can attempt a cure. But beware, if you're wrong the disease spreads faster.</p>
+
+      <p>To find the clues you need, you'll need to examine the other players for Humours and Symptoms. Find one of the other players and input their player code. Then, press the Examine button. It is customary to introduce yourself and make eye contact! Your shoes are great but you've seen them. Look up.</p> 
+
+      <p>You will receive two pieces of information about the pairs and sequence of the cure. They'll automatically be input into your medical chart. Once you have enough information you can attempt a cure. But be careful, a bad cure guess will accelerate the infection!</p>
+
+      <p>You'll be helped by the automatic collaboration and transmission of any pairs discovered by another player. They'll be immediately transmitted to all players' medical charts, though the correct sequence position will not. You must use what you have discovered along with deductive reasoning, using the common pair information to make an educated guess about the cure pairs and sequence.</p>
+
+      <p>Remember the clock is ticking from the moment the game starts. Examinations spread the disease and wrong guesses spread the disease so pay attention to the mortality rate. Most importantly remember you have to interact with every player!</p>
+
+      <p>Now get out there and...<br><br>
+
+      Mix, Mingle and Mort?!?</p>
+
+</div>
+
+<!-- Credits page -->
+<div hidden class="page" id="credits_page" >
+	   <ul>
+        <li>"Heartbeat" (146765__thenudo__heart-beat) : CC0</li>
+
+        <li>"Plague" by <a href="http://freemusicarchive.org/music/Devil_Music/" title="CC3 License">Devil Music</a> - (Devil_Music_-37-_Plague) :<a href="https://creativecommons.org/licenses/by-nc-nd/3.0/"> CC3</a></li>
+
+        <li>"Emergency Warning Signal" (372251__mpaol2023__standard-emergency-warning-signal-sews) : CC0</li>
+
+        <li>"Papageno Drunk" by <a href="http://freemusicarchive.org/music/Ergo_Phizmiz/" title="CC4 License">Ergo Phizmiz</a> - (Ergo_Phizmiz_-01-_Papageno_Drunk) :<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> CC4</a></li>
+
+        <li>"A Little bit of Dreammusik" by <a href="http://freemusicarchive.org/music/Ergo_Phizmiz/" title="CC4 License">Ergo Phizmiz</a> - (Ergo_Phizmiz_-02-_A_Little_Bit_of_Dreammusik) :<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> CC4</a></li>
+
+        <li>Squish from Zapsplat (zapsplat_cartoon_squish_squelch_wet_001_14500) :<a href="https://www.zapsplat.com/license-type/standard-license/"> License</a></li>
+
+        <li>Heart Rate Monitor from Zapsplat (medical_heart_rate_monitor_001.mp3) :<a href="https://www.zapsplat.com/license-type/standard-license/"> License</a></li>
+	   </ul>
+</div>
+
+<footer id=footer>
+	<button id="instructions_button" data-tooltip="Instructions">Instructions</button>
+	<button id="credits_button" data-tooltip="Credits">Credits</button>
+	<label id="player_code">YSN3D8</label>
+</footer>
+
+<footer hidden id=subpageFooter class="w3-container w3-flat-midnight-blue">
+  <button id="kill_button">Kill Game</button>
+</footer>
+
+
+</body>
+</html>
