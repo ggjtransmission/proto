@@ -47,6 +47,8 @@ module.exports = function (socketServer)
          break;   
          case "examine":
             console.log("examine player in game.js")
+            //For now just decrement two min off the clock
+            game.time - 120000;
             game.examine(message.humArray, message.symArray, message.humTrackArray, message.symTrackArray, message.id);
          break;
          case "foundPair":
@@ -65,6 +67,24 @@ module.exports = function (socketServer)
                game.knownPairArray.push(message.newPair);
             }
             socketServer.broadcast(JSON.stringify({"type":"foundPair","knownPairs":game.knownPairArray}));
+         break;
+         case "attemptCure":
+            var cure = true;
+            for(var i = 0; i < game.humoursCodeArray.length; i++){
+               if(game.humoursCodeArray[i] == message.humArray[i] && game.symptomsCodeArray[i] == message.symArray[i]){
+                  //do nothing as these items match
+               }else{
+                  cure = false;
+               }
+            }
+            if(cure){
+               //Then broadcast win page
+               socketServer.broadcast(JSON.stringify({"type":"cureSuccessful"}))
+            }else{
+               //broadcast out that userId 
+               //For now just decrement one min off the clock
+               game.time - 60000;
+            }
          break;
          //debug function so that we can test restart
          case "killGame":
