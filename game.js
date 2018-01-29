@@ -48,7 +48,7 @@ module.exports = function (socketServer)
          case "examine":
             console.log("examine player in game.js")
             //For now just decrement two min off the clock
-            game.time - 120000;
+            game.time = game.time - 120;
             game.examine(message.humArray, message.symArray, message.humTrackArray, message.symTrackArray, message.id);
          break;
          case "foundPair":
@@ -80,10 +80,16 @@ module.exports = function (socketServer)
             if(cure){
                //Then broadcast win page
                socketServer.broadcast(JSON.stringify({"type":"cureSuccessful"}))
+               game.exists = false;
+               game.running = false;
+               game.time = ALLOWED_TIME;
+               game.numberOfRegisteredPlayers = 0;
+               game.players = [];
+               game.knownPairArray = [];
             }else{
                //broadcast out that userId 
                //For now just decrement one min off the clock
-               game.time - 60000;
+               game.time = game.time - 60;
             }
          break;
          //debug function so that we can test restart
