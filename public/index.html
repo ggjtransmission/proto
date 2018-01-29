@@ -333,6 +333,7 @@ function togglemusic() {
 }
 
 var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
+var heartbeat = new Audio("medical_heart_rate_monitor_001.mp3");
    </script>
 
 </head>
@@ -360,8 +361,8 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
       <center>
          <p>The game of socially transmitted diseases.</p>
          <img src="PlagueParty2.png" alt="" width="363" height="388.5">
-         <button id="create-game_button">Create Game</button>
-         <button id="squishsound" onclick="squish.play()">SQUISH</button>
+         <button id="create-game_button" onclick="squish.play()">Create Game</button>
+         <!--<button id="squishsound" onclick="squish.play()">SQUISH</button>-->
       </center>
    </div>   
   </div>
@@ -379,7 +380,7 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
          <input id="player_name" type="text" name="name"/>
          <p id="player_count"> 0 / 4 </p>
          <p>Players Joined</p>
-         <button id="join_button">Join Game</button>
+         <button id="join_button" onclick="squish.play()">Join Game</button>
       </center>
    </div>
   </div>
@@ -425,8 +426,8 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
    <div hidden class="page" id="disease_page" >
       <center>
          <p>There's been an outbreak!</p>
-         <p id=timeRemaining> Left to find a Cure.<br>
-            Here is what we know...</p>
+         <p id=timeRemaining></p>
+         <p>Left to find a Cure.<br>Here is what we know...</p>
          <p>Humours Known: </p>
          <div class="humours-container">
             <div class="humour-item">
@@ -457,8 +458,9 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
             <div class="pair-item"><p id="pair-item3">##</p></div>
          </div>
             <input id="patient_code" type="text" name="patientCode" placeholder="Patient Name"/>
-            <button id="attempt-cure_button">Attempt<br/>Cure</button>
-            <button id="examine_button">Examine</button>
+            <button id="examine_button" onclick="squish.play()">Examine</button>
+            <button id="attempt-cure_button" onclick="heartbeat.play()">Attempt<br/>Cure</button>
+            
       </center>
    </div>
   </div>
@@ -471,7 +473,7 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
   <div class="w3-cell w3-container">
    <div hidden class="page" id="instructions_page" >
       <center>
-      <p>Plague Party is The Game of Socially Transmitted Diseases. </p>
+      <h2>Plague Party is The Game of Socially Transmitted Diseases. </h2>
 
       <p>Get your mind out of the gutter, it's social...<br>
 
@@ -525,9 +527,9 @@ var squish = new Audio("zapsplat_cartoon_squish_squelch_wet_001_14500.mp3");
 </div>
 
 <footer id=footer class="w3-container w3-flat-midnight-blue">
-  <button id="instructions_button" data-tooltip="Instructions">i</button>
+  <button id="instructions_button" title="Instructions">i</button>
   <label id="player_code"></label>
-  <button id="credits_button" data-tooltip="Credits">c</button>
+  <button id="credits_button" title="Credits">c</button>
 </footer>
 
 <footer hidden id=subpageFooter class="w3-container w3-flat-midnight-blue">
