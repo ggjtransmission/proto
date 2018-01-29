@@ -267,12 +267,16 @@
 
       function updateArrayValues(area, num){
          //This updates the humours and symptoms
-         if(area === "humour"){
-            humoursArray[num] = document.getElementById("humour-item" + num).value;              
-         }
-         if(area === "symptom"){  
-            symptomsArray[num] = document.getElementById("symptom-item" + num).value;          
-         }        
+         // if(area === "humour"){
+         //    humoursArray[num] = document.getElementById("humour-item" + num).value;              
+         // }
+         // if(area === "symptom"){  
+         //    symptomsArray[num] = document.getElementById("symptom-item" + num).value;          
+         // } 
+         for(var i = 0; i < humoursArray.length; i++){
+            humoursArray[i] = document.getElementById("humour-item" + i).value;            
+            symptomsArray[i] = document.getElementById("symptom-item" + i).value;
+         }       
       }
 
       //***********************
@@ -462,24 +466,24 @@ var heartbeat = new Audio("medical_heart_rate_monitor_001.mp3");
          <p>Humours Known: </p>
          <div class="humours-container">
             <div class="humour-item">
-         <input id="humour-item0" type="text" value="#" onchange="updateArrayValues("humour", 0)" /></div>
+         <input id="humour-item0" type="text" value="#" onchange="updateArrayValues()" /></div>
             <div class="humour-item">
-         <input id="humour-item1" type="text" value="#" onchange="updateArrayValues("humour", 1)" /></div>
+         <input id="humour-item1" type="text" value="#" onchange="updateArrayValues()" /></div>
             <div class="humour-item">
-         <input id="humour-item2" type="text" value="#" onchange="updateArrayValues("humour", 2)" /></div>
+         <input id="humour-item2" type="text" value="#" onchange="updateArrayValues()" /></div>
             <div class="humour-item">
-         <input id="humour-item3" type="text" value="#" onchange="updateArrayValues("humour", 3)" /></div>
+         <input id="humour-item3" type="text" value="#" onchange="updateArrayValues()" /></div>
          </div>
          <p>Symptoms Known: </p>
          <div class="symptoms-container">
             <div class="symptom-item">
-         <input id="symptom-item0" type="text"  value="#" onchange="updateArrayValues("symptom", 0)" /></div>
+         <input id="symptom-item0" type="text"  value="#" onchange="updateArrayValues()" /></div>
             <div class="symptom-item">
-         <input id="symptom-item1" type="text"  value="#" onchange="updateArrayValues("symptom", 1)" /></div>
+         <input id="symptom-item1" type="text"  value="#" onchange="updateArrayValues()" /></div>
             <div class="symptom-item">
-         <input id="symptom-item2" type="text"  value="#" onchange="updateArrayValues("symptom", 2)" /></div>
+         <input id="symptom-item2" type="text"  value="#" onchange="updateArrayValues()" /></div>
             <div class="symptom-item">
-         <input id="symptom-item3" type="text"  value="#" onchange="updateArrayValues("symptom", 3)" /></div>
+         <input id="symptom-item3" type="text"  value="#" onchange="updateArrayValues()" /></div>
          </div>
          <p>Known Pairs: </p>
          <div class="pairs-container">
